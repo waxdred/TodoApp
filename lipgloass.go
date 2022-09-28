@@ -30,6 +30,14 @@ var (
 	highlight = lipgloss.AdaptiveColor{Light: blue, Dark: blue}
 	special   = lipgloss.AdaptiveColor{Light: "#43BF6D", Dark: "#73F59F"}
 
+	// helper
+	helpStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#383838")).
+			Border(borderRadius).
+			BorderTop(false).
+			BorderLeft(false).
+			BorderRight(false)
+
 	// cursor
 	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 	cursorStyle  = focusedStyle.Copy()

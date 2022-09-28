@@ -9,9 +9,11 @@ import (
 
 func main() {
 	initModel := Model{
-		projectList: InitProjectList(),
-		spin:        SpinInit(spinStyle),
-		search:      InputInit(searchStyle),
+		projectAdd:    false,
+		projectRename: false,
+		projectList:   InitProjectList(),
+		spin:          SpinInit(spinStyle),
+		search:        InputInit(searchStyle),
 		// TODO: need change with touch up or down or /
 		typing: false,
 
@@ -23,6 +25,7 @@ func main() {
 	}
 	initModel.projectList.Add("test")
 	initModel.projectList.Add("test1")
+	initModel.projectList.Add("Inception")
 	initModel.projectList.Add("test2")
 	initModel.projectList.Add("test3")
 	initModel.projectList.Add("test4")

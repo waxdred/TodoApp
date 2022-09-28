@@ -11,6 +11,8 @@ import (
 )
 
 type Model struct {
+	projectAdd     bool
+	projectRename  bool
 	projectList    *project
 	paginatorIndex int
 	spin           spinner.Model
@@ -52,7 +54,6 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, nil
 		case "ctrl+r":
 			m.typing = true
-			m.search.Reset()
 		case "esc":
 			if m.typing {
 				m.typing = false
@@ -67,6 +68,10 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 			if m.typing {
 				m.typing = false
+			}
+			if m.projectAdd {
+				m.projectAdd = false
+				m.projectList.Add(m.searchValue)
 			}
 		case "tab", "down":
 			if m.projectActive {
@@ -124,23 +129,40 @@ func (m *Model) View() string {
 			} else {
 				k = 0
 			}
-			for i := k; i < SizeList(row); i++ {
-				if lipgloss.Height(col) < height-6 {
-					if i == m.projectList.index {
-						col = lipgloss.JoinVertical(lipgloss.Top, col, Selectlist.Render(m.projectList.list[i]))
-					} else {
+			for i := 0; i < SizeList(row); i++ {
+				if lipgloss.Height(col) < height-6 && k < m.projectList.size {
+					if k == m.projectList.index {
+						col = lipgloss.JoinVertical(lipgloss.Top, col, Selectlist.Render(m.projectList.list[k]))
+					} else if k < m.projectList.size {
 						col = lipgloss.JoinVertical(lipgloss.Top, col, NoSelectlist.Render(m.projectList.list[k]))
 					}
 					k++
+				} else if lipgloss.Height(col) < height-6 {
+					col = lipgloss.JoinVertical(lipgloss.Top, col, "\n\n")
 				}
 			}
 			pagnStr := fmt.Sprint(strings.Repeat("•", pagn))
 			col = lipgloss.JoinVertical(lipgloss.Top, col, ActiveDot.Render(pagnStr))
 			ret = fmt.Sprintf("%s", col)
 		} else if m.typing {
-			col := lipgloss.JoinVertical(lipgloss.Top, row, m.search.View())
-			for i := 0; i < int(m.projectList.size); i++ {
-				col = lipgloss.JoinVertical(lipgloss.Top, col, Selectlist.Render(m.projectList.list[i]))
+			var col string
+			if m.projectList.index >= SizeList(row) {
+				k = SizeList(row)
+			} else {
+				k = 0
+			}
+			col = lipgloss.JoinVertical(lipgloss.Top, row, m.search.View())
+			for i := 0; i < SizeList(row); i++ {
+				if lipgloss.Height(col) < height-6 && k < m.projectList.size {
+					if k == m.projectList.index {
+						col = lipgloss.JoinVertical(lipgloss.Top, col, Selectlist.Render(m.projectList.list[k]))
+					} else if k < m.projectList.size {
+						col = lipgloss.JoinVertical(lipgloss.Top, col, NoSelectlist.Render(m.projectList.list[k]))
+					}
+					k++
+				} else if lipgloss.Height(col) < height-6 {
+					col = lipgloss.JoinVertical(lipgloss.Top, col, "\n\n")
+				}
 			}
 			ret = fmt.Sprintf("%s", col)
 		} else {
@@ -172,7 +194,9 @@ func (m *Model) View() string {
 		)
 		return header + dialog
 	}
-	return ret
+	// helper
+	helper := fmt.Sprint("\n\n\nRename: r  Add: a  Search: ctrl+r  nav: up|down j|k  exit: esc | ctrl+c")
+	return ret + helpStyle.Render(helper)
 }
 
 func max(a, b int) int {

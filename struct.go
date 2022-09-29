@@ -25,5 +25,6 @@ type Model struct {
 	todo           lipgloss.Style
 	exitPopup      bool
 	DeletePopup    bool
+	AddPopup       bool
 	err            error
 }

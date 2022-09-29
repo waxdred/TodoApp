@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
@@ -31,6 +32,10 @@ func esc(m *Model) (tea.Model, tea.Cmd) {
 		m.exitPopup = false
 	} else if m.DeletePopup {
 		m.DeletePopup = false
+	} else if m.AddPopup {
+		m.AddPopup = false
+	} else if m.projectRename {
+		m.projectRename = false
 	} else {
 		m.exitPopup = true
 	}
@@ -45,9 +50,20 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 		m.typing = false
 	}
 	if m.projectAdd {
+		// TODO work on add AddPopup don't work
+		fmt.Println("test")
 		m.projectAdd = false
-		m.projectList.Add(m.addValue)
+		ret := m.projectList.Add(m.addValue)
+		fmt.Println(ret)
+		if !ret {
+			fmt.Println("Enter")
+			m.AddPopup = true
+		}
 		m.addbuffer.Reset()
+		return m, nil
+	}
+	if m.AddPopup {
+		m.AddPopup = false
 	}
 	if m.projectRename {
 		m.projectRename = false
@@ -154,6 +170,8 @@ func ProjectActive(m *Model, row, header, ret string) string {
 	} else if m.projectAdd {
 		col = lipgloss.JoinVertical(lipgloss.Top, row, m.addbuffer.View())
 	} else if m.projectRename {
+		rename := fmt.Sprint("Rename: ", m.projectList.list[m.projectList.index])
+		m.renamebuffer.Placeholder = rename
 		col = lipgloss.JoinVertical(lipgloss.Top, row, m.renamebuffer.View())
 	} else {
 		col = lipgloss.JoinVertical(lipgloss.Top, row, "\n")
@@ -164,19 +182,25 @@ func ProjectActive(m *Model, row, header, ret string) string {
 		k = 0
 	}
 	for i := 0; i < SizeList(row); i++ {
+		var matched bool
+		if len(m.searchValue) < 2 {
+			matched = true
+		} else {
+			matched, _ = regexp.MatchString(m.searchValue, m.projectList.list[i])
+		}
 		if lipgloss.Height(col) < height-6 && k < m.projectList.size {
-			if k == m.projectList.index {
+			if k == m.projectList.index && matched {
 				col = lipgloss.JoinVertical(lipgloss.Top, col, Selectlist.Render(m.projectList.list[k]))
-			} else if k < m.projectList.size {
+			} else if k < m.projectList.size && matched {
 				col = lipgloss.JoinVertical(lipgloss.Top, col, NoSelectlist.Render(m.projectList.list[k]))
 			}
 			k++
-		} else if lipgloss.Height(col) < height-6 {
-			col = lipgloss.JoinVertical(lipgloss.Top, col, "\n\n")
 		}
 	}
-	pagnStr := fmt.Sprint(strings.Repeat("•", pagn))
-	col = lipgloss.JoinVertical(lipgloss.Top, col, ActiveDot.Render(pagnStr))
+	for lipgloss.Height(col) < height-6 {
+		col = lipgloss.JoinVertical(lipgloss.Top, col, "\n\n")
+	}
+	col = ActivatePagn(pagn, SizeList(row), m.projectList.index, col)
 	ret = fmt.Sprintf("%s", col)
 	return ret
 }

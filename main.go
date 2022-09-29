@@ -25,6 +25,7 @@ func main() {
 		todo:          tabStyle,
 		exitPopup:     false,
 		DeletePopup:   false,
+		AddPopup:      false,
 	}
 	errTea := tea.NewProgram(&initModel, tea.WithAltScreen()).Start()
 	if errTea != nil {

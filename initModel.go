@@ -37,3 +37,37 @@ func Popup(text string) string {
 	)
 	return dialog
 }
+
+func PopupAdd(text string) string {
+	ok := buttonStyle.Render(" ﬌ Enter")
+	question := lipgloss.NewStyle().Width(50).Align(lipgloss.Center).Render(text)
+	buttons := lipgloss.JoinHorizontal(lipgloss.Top, ok)
+	ui := lipgloss.JoinVertical(lipgloss.Center, question, buttons)
+	dialog := lipgloss.Place(width, height/2,
+		lipgloss.Center, lipgloss.Center,
+		dialogExit.Render(ui),
+		lipgloss.WithWhitespaceChars(" "),
+		lipgloss.WithWhitespaceForeground(subtle),
+	)
+	return dialog
+}
+
+func ActivatePagn(pagn, size, idx int, col string) string {
+	var row string
+	i := 1
+	for k := 0; k < pagn; k++ {
+		if idx < size*i {
+			break
+		}
+		i++
+	}
+	for k := 0; k < pagn; k++ {
+		if k == i-1 {
+			row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, InactiveDot.Render("•"))
+		} else {
+			row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, ActiveDot.Render("•"))
+		}
+	}
+	col = lipgloss.JoinVertical(lipgloss.Top, col, row)
+	return col
+}

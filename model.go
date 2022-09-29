@@ -84,6 +84,8 @@ func (m *Model) View() string {
 		return header + Popup("Are you sure you want to exit?")
 	} else if m.DeletePopup {
 		return header + Popup("Are you sure you want to Delete?")
+	} else if m.AddPopup {
+		return header + PopupAdd("Todo exist already!")
 	}
 	// helper
 	helper := fmt.Sprint(

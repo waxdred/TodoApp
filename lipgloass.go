@@ -128,13 +128,13 @@ var (
 			Foreground(highlight).
 			Margin(0).
 			Padding(0, 1).
-			Width(width / 3)
+			Width(width / 4)
 
 	NoSelectlist = lipgloss.NewStyle().
 			Border(borderRadius).
 			Foreground(subtle).
 			Padding(0, 1).
-			Width(width / 3)
+			Width(width / 4)
 )
 
 func InitSizeWindow() (int, int) {

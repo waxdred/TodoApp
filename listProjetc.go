@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -12,8 +14,10 @@ type project struct {
 }
 
 func (t *project) Add(title string) {
-	(*t).list = append((*t).list, title)
-	(*t).size++
+	if title != "" {
+		(*t).list = append((*t).list, title)
+		(*t).size++
+	}
 }
 
 func InitProjectList() *project {
@@ -37,4 +41,25 @@ func (t project) SizePag(size int) int {
 		return valInt + 1
 	}
 	return valInt
+}
+
+func (t *project) Rename(title string, idx int) {
+	if (*t).list[idx] != "" {
+		(*t).list[idx] = title
+	}
+}
+
+func (t *project) Delete(idx int) {
+	var tmp []string
+	i := 0
+	if idx <= (*t).size {
+		for _, lst := range (*t).list {
+			fmt.Println(lst)
+			// if i != idx {
+			// 	tmp = append(tmp, lst)
+			// }
+			i++
+		}
+		(*t).list = tmp
+	}
 }

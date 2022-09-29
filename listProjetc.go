@@ -40,6 +40,7 @@ func (t *project) GetProjectSave() {
 }
 
 func (t *project) Add(title string) bool {
+	path := fmt.Sprint(Path, title, ".json")
 	if !t.CmpTittle(title) {
 		return false
 	}
@@ -47,6 +48,8 @@ func (t *project) Add(title string) bool {
 		title = strings.Replace(title, " ", "_", -1)
 		(*t).list = append((*t).list, title)
 		(*t).size++
+		(*t).index = 0
+		os.Create(path)
 	}
 	return true
 }
@@ -100,7 +103,6 @@ func (t *project) Delete(idx int) {
 	i := 0
 	if idx <= (*t).size {
 		for _, lst := range (*t).list {
-			fmt.Println(lst)
 			if i != idx {
 				tmp = append(tmp, lst)
 			}

@@ -36,6 +36,9 @@ func esc(m *Model) (tea.Model, tea.Cmd) {
 		m.AddPopup = false
 	} else if m.projectRename {
 		m.projectRename = false
+	} else if m.todoActive {
+		m.todoActive = false
+		m.projectActive = true
 	} else {
 		m.exitPopup = true
 	}
@@ -50,13 +53,10 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 		m.typing = false
 	}
 	if m.projectAdd {
-		// TODO work on add AddPopup don't work
-		fmt.Println("test")
 		m.projectAdd = false
 		ret := m.projectList.Add(m.addValue)
 		fmt.Println(ret)
 		if !ret {
-			fmt.Println("Enter")
 			m.AddPopup = true
 		}
 		m.addbuffer.Reset()
@@ -64,15 +64,23 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 	}
 	if m.AddPopup {
 		m.AddPopup = false
+		return m, nil
 	}
 	if m.projectRename {
 		m.projectRename = false
 		m.projectList.Rename(m.RenameValue, m.projectList.index)
 		m.renamebuffer.Reset()
+		return m, nil
 	}
 	if m.DeletePopup {
 		m.projectList.Delete(m.projectList.index)
 		m.DeletePopup = false
+		return m, nil
+	}
+	if m.projectActive {
+		m.todoActive = true
+		m.projectActive = false
+		return m, nil
 	}
 	return m, nil
 }

@@ -7,17 +7,21 @@ import (
 )
 
 func right(m *Model) (tea.Model, tea.Cmd) {
-	if !m.exitPopup {
-		m.todoActive = true
-		m.projectActive = false
+	if m.todoActive {
+		m.todoView++
+		if m.todoView > 2 {
+			m.todoView = 0
+		}
 	}
 	return m, nil
 }
 
 func left(m *Model) (tea.Model, tea.Cmd) {
-	if !m.exitPopup {
-		m.todoActive = false
-		m.projectActive = true
+	if m.todoActive {
+		m.todoView--
+		if m.todoView < 0 {
+			m.todoView = 3
+		}
 	}
 	return m, nil
 }

@@ -7,6 +7,7 @@ import (
 )
 
 type Model struct {
+	Todo           Todo
 	projectAdd     bool
 	projectRename  bool
 	projectList    *project
@@ -31,31 +32,32 @@ type Model struct {
 }
 
 type Todolist struct {
-	title string `json:"title"`
-	desc  string `json:"desc"`
-	date  string `json:"date"`
+	Title string
+	Desc  string
+	Date  string
 }
 
 type Todo struct {
-	Todo []struct {
-		title []string `json:"title"`
-		desc  []string `json:"desc"`
-		date  []string `json:"date"`
-		idx   int      `json:"idx"`
-		len   int      `json:"len"`
+	Project string `json:"project"`
+	Todo    struct {
+		Title []string `json:"title"`
+		Desc  []string `json:"desc"`
+		Date  []string `json:"date"`
+		Idx   int      `json:"idx"`
+		Len   int      `json:"len"`
 	} `json:"todo"`
 	Progress struct {
-		title []string `json:"title"`
-		desc  []string `json:"desc"`
-		date  []string `json:"date"`
-		idx   int      `json:"idx"`
-		len   int      `json:"len"`
+		Title []string `json:"title"`
+		Desc  []string `json:"desc"`
+		Date  []string `json:"date"`
+		Idx   int      `json:"idx"`
+		Len   int      `json:"len"`
 	} `json:"progress"`
-	Finish []struct {
-		title []string `json:"title"`
-		desc  []string `json:"desc"`
-		date  []string `json:"date"`
-		idx   int      `json:"idx"`
-		len   int      `json:"len"`
+	Finish struct {
+		Title []string `json:"title"`
+		Desc  []string `json:"desc"`
+		Date  []string `json:"date"`
+		Idx   int      `json:"idx"`
+		Len   int      `json:"len"`
 	} `json:"finish"`
 }

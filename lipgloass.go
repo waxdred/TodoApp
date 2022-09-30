@@ -74,7 +74,10 @@ var (
 	DescriptionSelectBottom = DescriptionStyle.Copy().BorderTop(false)
 	DescTiltleStyle         = lipgloss.NewStyle().Foreground(lipgloss.Color(blue)).
 				Bold(true).Underline(true).Padding(1, 0)
-	DescStyle = lipgloss.NewStyle().Margin(0, 4)
+	DescNorStyle = lipgloss.NewStyle().Foreground(lipgloss.Color(blue)).
+			Bold(true).Underline(true).Padding(0, 0)
+	DescStyle     = lipgloss.NewStyle().Margin(0, 4)
+	DescDateStyle = lipgloss.NewStyle().Margin(0, 1)
 
 	// border
 	borderActive = lipgloss.Border{

@@ -27,6 +27,10 @@ func main() {
 		DeletePopup:   false,
 		AddPopup:      false,
 	}
+
+	var t Todo
+	t.GetTodo("Project")
+	initModel.Todo = t
 	errTea := tea.NewProgram(&initModel, tea.WithAltScreen()).Start()
 	if errTea != nil {
 		fmt.Println("Error: ", errTea)

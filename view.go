@@ -55,7 +55,23 @@ func ProjectActive(m *Model, row, header, ret string) string {
 	return ret
 }
 
-func ViewTabTodo(list, progress, finish []string, idx, pos int) string {
+// TODO Work here need found better solution
+func ViewTodoRow(Select, noSelect, textStyle lipgloss.Style, row, text string, style bool) string {
+	if style {
+		row = lipgloss.JoinVertical(
+			lipgloss.Top,
+			row,
+			Select.Render(text))
+	} else {
+		row = lipgloss.JoinVertical(
+			lipgloss.Top,
+			row,
+			noSelect.Render(textStyle.Render(text)))
+	}
+	return row
+}
+
+func ViewTabTodo(list, progress, finish []string, idx, pos int, m *Model) string {
 	var ret string
 	var row string
 	for i := 0; i < len(list); i++ {
@@ -110,13 +126,39 @@ func ViewTabTodo(list, progress, finish []string, idx, pos int) string {
 
 func ViewDesc(todo interface{}) string {
 	todolist := todo.(Todolist)
-	desc := lipgloss.JoinVertical(lipgloss.Top, DescriptionSelectTop.Render(DescTiltleStyle.Render(todolist.title)))
-	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescTiltleStyle.Render("Description:")))
-	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescStyle.Render(todolist.desc)))
-	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescTiltleStyle.Render("Creation date:")))
-	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescStyle.Render(todolist.date)))
+	desc := lipgloss.JoinVertical(lipgloss.Top, DescriptionSelectTop.Render(DescTiltleStyle.Render(todolist.Title)))
+	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescNorStyle.Render("Description:")))
+	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescStyle.Render(todolist.Desc)))
+	desc = lipgloss.JoinVertical(
+		lipgloss.Top,
+		desc,
+		DescriptionSelectMiddle.Render(DescNorStyle.Render("Creation date:")+DescDateStyle.Render(todolist.Date)),
+	)
+	for lipgloss.Height(desc) <= height/6 {
+		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(" "))
+	}
 	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectBottom.Render(" "))
 	return desc
+}
+
+func ViewTask(idx int) []string {
+	var ret []string
+	if idx == 0 {
+		ret = append(ret, tabTodoStyleActive.Render("Task"))
+	} else {
+		ret = append(ret, tabTodoStyle.Render("Task"))
+	}
+	if idx == 1 {
+		ret = append(ret, tabTodoStyleActive.Render("Progress"))
+	} else {
+		ret = append(ret, tabTodoStyle.Render("Progress"))
+	}
+	if idx == 2 {
+		ret = append(ret, tabTodoStyleActive.Render("Finish"))
+	} else {
+		ret = append(ret, tabTodoStyle.Render("Finish"))
+	}
+	return ret
 }
 
 func todoView(m *Model, ret string) string {
@@ -129,25 +171,23 @@ func todoView(m *Model, ret string) string {
 	row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
 
 	// TODO add fonction for chose style
-	Task := tabTodoStyleActive.Render("Task")
-	Progress := tabTodoStyle.Render("Progress")
-	Finish := tabTodoStyle.Render("Finish")
-	gap = lipgloss.JoinHorizontal(lipgloss.Top, Task, Progress, Finish)
+	task := ViewTask(m.todoView)
+	gap = lipgloss.JoinHorizontal(lipgloss.Top, task[0], task[1], task[2])
 	row = lipgloss.JoinVertical(lipgloss.Top, row, gap)
 	// place Task
-	list := []string{
-		"test",
-		"test0",
-		"test1",
-	}
+	list := m.Todo.Todo.Title
 	desc := Todolist{
-		title: "inception",
-		desc:  "Need work on the program add \nnew feat",
-		date:  "vendredi 3 novembre",
+		Title: m.Todo.Todo.Title[0],
+		Desc:  m.Todo.Todo.Desc[0],
+		Date:  m.Todo.Todo.Desc[0],
 	}
-	task := ViewTabTodo(list, list, list, 0, 0)
+	tasks := ViewTabTodo(list, list, list, 0, m.todoView, m)
 
-	row = lipgloss.JoinVertical(lipgloss.Top, row, task, ViewDesc(desc))
+	row = lipgloss.JoinVertical(lipgloss.Top, row, tasks, ViewDesc(desc))
+	helper := fmt.Sprint(
+		"\nAdd: <ctrl+a>   Modify: <ctrl+r>   Delete: <ctrl+d>   nav: arrow  Back to Project: <Esc>",
+	)
+	row = lipgloss.JoinVertical(lipgloss.Top, row, helper)
 	ret = fmt.Sprintf("%s", row)
 	return ret
 }

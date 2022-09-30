@@ -49,7 +49,10 @@ func (t *project) Add(title string) bool {
 		(*t).list = append((*t).list, title)
 		(*t).size++
 		(*t).index = 0
-		os.Create(path)
+		_, err := os.Stat(path)
+		if os.IsNotExist(err) {
+			os.Create(path)
+		}
 	}
 	return true
 }

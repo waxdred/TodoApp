@@ -49,6 +49,33 @@ var (
 	ActiveDot   = lipgloss.NewStyle().Foreground(lipgloss.AdaptiveColor{Light: "235", Dark: "252"})
 	InactiveDot = lipgloss.NewStyle().Foreground(lipgloss.AdaptiveColor{Light: "250", Dark: "238"})
 
+	// todo style
+	tabTodoStyle = lipgloss.NewStyle().
+			Border(borderRadius).
+			Width(width/3).
+			Padding(0, 1).Margin(0, 1)
+	tabTodoSelect       = tabTodoStyle.Copy().BorderForeground(lipgloss.Color(blue))
+	tabTodoSelectTop    = tabTodoSelect.Copy().BorderBottom(false)
+	tabTodoSelectMiddle = tabTodoSelect.Copy().BorderBottom(false).BorderTop(false)
+	tabTodoSelectBottom = tabTodoSelect.Copy().BorderTop(false)
+
+	tabTodoNoSelect    = tabTodoStyle.Copy().Height(height / 4).BorderForeground(highlight)
+	tabTodoStyleActive = tabTodoStyle.Copy().BorderForeground(lipgloss.Color(blue))
+	taskSelect         = lipgloss.NewStyle().Foreground(lipgloss.Color(blue))
+	taskNoSelect       = lipgloss.NewStyle().Foreground(highlight)
+
+	// Description todo
+	DescriptionStyle = lipgloss.NewStyle().
+				Border(borderRadius).
+				Width(width+7).
+				Padding(0, 1).Margin(0, 1)
+	DescriptionSelectTop    = DescriptionStyle.Copy().BorderBottom(false)
+	DescriptionSelectMiddle = DescriptionStyle.Copy().BorderBottom(false).BorderTop(false)
+	DescriptionSelectBottom = DescriptionStyle.Copy().BorderTop(false)
+	DescTiltleStyle         = lipgloss.NewStyle().Foreground(lipgloss.Color(blue)).
+				Bold(true).Underline(true).Padding(1, 0)
+	DescStyle = lipgloss.NewStyle().Margin(0, 4)
+
 	// border
 	borderActive = lipgloss.Border{
 		Top:         "─",

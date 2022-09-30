@@ -26,5 +26,36 @@ type Model struct {
 	exitPopup      bool
 	DeletePopup    bool
 	AddPopup       bool
+	todoView       int
 	err            error
+}
+
+type Todolist struct {
+	title string `json:"title"`
+	desc  string `json:"desc"`
+	date  string `json:"date"`
+}
+
+type Todo struct {
+	Todo []struct {
+		title []string `json:"title"`
+		desc  []string `json:"desc"`
+		date  []string `json:"date"`
+		idx   int      `json:"idx"`
+		len   int      `json:"len"`
+	} `json:"todo"`
+	Progress struct {
+		title []string `json:"title"`
+		desc  []string `json:"desc"`
+		date  []string `json:"date"`
+		idx   int      `json:"idx"`
+		len   int      `json:"len"`
+	} `json:"progress"`
+	Finish []struct {
+		title []string `json:"title"`
+		desc  []string `json:"desc"`
+		date  []string `json:"date"`
+		idx   int      `json:"idx"`
+		len   int      `json:"len"`
+	} `json:"finish"`
 }

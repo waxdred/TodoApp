@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
@@ -59,6 +58,7 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m *Model) View() string {
 	var ret string
 	var header string
+	var helper string
 	row := lipgloss.JoinHorizontal(
 		lipgloss.Top,
 		activeTabStyle.Render(m.spin.View()+"Project"),
@@ -71,14 +71,7 @@ func (m *Model) View() string {
 	}
 	m.spin.Tick()
 	if m.todoActive {
-		row := lipgloss.JoinHorizontal(
-			lipgloss.Top,
-			tabStyle.Render("Project"),
-			activeTabStyle.Render(m.spin.View()+"Todo"),
-		)
-		gap := tabGap.Render(strings.Repeat(" ", max(0, lipgloss.Width(row)+(width))))
-		row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
-		ret = fmt.Sprintf("%s", row)
+		ret = todoView(m, ret)
 	}
 	if m.exitPopup {
 		return header + Popup("Are you sure you want to exit?")
@@ -88,9 +81,15 @@ func (m *Model) View() string {
 		return header + PopupAdd("Todo exist already!")
 	}
 	// helper
-	helper := fmt.Sprint(
-		"\n\n\nAdd: <ctrl+a>   Rename: <ctrl+r>   Delete <ctrl+d>   Search: <ctrl+f>  nav: arrow  exit: <Esc>",
-	)
+	if m.projectActive {
+		helper = fmt.Sprint(
+			"\n\n\nAdd: <ctrl+a>   Rename: <ctrl+r>   Delete <ctrl+d>   Search: <ctrl+f>  nav: arrow  exit: <Esc>",
+		)
+	} else if m.todoActive {
+		helper = fmt.Sprint(
+			"\n\n\n",
+		)
+	}
 	return ret + helpStyle.Render(helper)
 }
 

@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-	"regexp"
-	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 )
 
 func right(m *Model) (tea.Model, tea.Cmd) {
@@ -39,6 +36,7 @@ func esc(m *Model) (tea.Model, tea.Cmd) {
 	} else if m.todoActive {
 		m.todoActive = false
 		m.projectActive = true
+		m.projectList.index = 0
 	} else {
 		m.exitPopup = true
 	}
@@ -164,51 +162,4 @@ func Defatul(m *Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	m.spin, cmd = m.spin.Update(msg)
 	return m, cmd
-}
-
-func ProjectActive(m *Model, row, header, ret string) string {
-	var k int
-	gap := tabGap.Render(strings.Repeat(" ", max(0, lipgloss.Width(row)+(width))))
-	header = lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
-	row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
-	pagn := m.projectList.SizePag(SizeList(row))
-	var col string
-	if m.typing {
-		col = lipgloss.JoinVertical(lipgloss.Top, row, m.search.View())
-	} else if m.projectAdd {
-		col = lipgloss.JoinVertical(lipgloss.Top, row, m.addbuffer.View())
-	} else if m.projectRename {
-		rename := fmt.Sprint("Rename: ", m.projectList.list[m.projectList.index])
-		m.renamebuffer.Placeholder = rename
-		col = lipgloss.JoinVertical(lipgloss.Top, row, m.renamebuffer.View())
-	} else {
-		col = lipgloss.JoinVertical(lipgloss.Top, row, "\n")
-	}
-	if m.projectList.index >= SizeList(row) {
-		k = SizeList(row)
-	} else {
-		k = 0
-	}
-	for i := 0; i < SizeList(row); i++ {
-		var matched bool
-		if len(m.searchValue) < 2 {
-			matched = true
-		} else {
-			matched, _ = regexp.MatchString(m.searchValue, m.projectList.list[i])
-		}
-		if lipgloss.Height(col) < height-6 && k < m.projectList.size {
-			if k == m.projectList.index && matched {
-				col = lipgloss.JoinVertical(lipgloss.Top, col, Selectlist.Render(m.projectList.list[k]))
-			} else if k < m.projectList.size && matched {
-				col = lipgloss.JoinVertical(lipgloss.Top, col, NoSelectlist.Render(m.projectList.list[k]))
-			}
-			k++
-		}
-	}
-	for lipgloss.Height(col) < height-6 {
-		col = lipgloss.JoinVertical(lipgloss.Top, col, "\n\n")
-	}
-	col = ActivatePagn(pagn, SizeList(row), m.projectList.index, col)
-	ret = fmt.Sprintf("%s", col)
-	return ret
 }

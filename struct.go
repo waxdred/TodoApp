@@ -32,32 +32,16 @@ type Model struct {
 }
 
 type Todolist struct {
-	Title string
-	Desc  string
-	Date  string
+	Title []string `json:"title"`
+	Desc  []string `json:"desc"`
+	Date  []string `json:"date"`
+	Idx   int      `json:"idx"`
+	Len   int      `json:"len"`
 }
 
 type Todo struct {
-	Project string `json:"project"`
-	Todo    struct {
-		Title []string `json:"title"`
-		Desc  []string `json:"desc"`
-		Date  []string `json:"date"`
-		Idx   int      `json:"idx"`
-		Len   int      `json:"len"`
-	} `json:"todo"`
-	Progress struct {
-		Title []string `json:"title"`
-		Desc  []string `json:"desc"`
-		Date  []string `json:"date"`
-		Idx   int      `json:"idx"`
-		Len   int      `json:"len"`
-	} `json:"progress"`
-	Finish struct {
-		Title []string `json:"title"`
-		Desc  []string `json:"desc"`
-		Date  []string `json:"date"`
-		Idx   int      `json:"idx"`
-		Len   int      `json:"len"`
-	} `json:"finish"`
+	Project  string   `json:"project"`
+	Todo     Todolist `json:"todo"`
+	Progress Todolist `json:"progress"`
+	Finish   Todolist `json:"finish"`
 }

@@ -29,6 +29,7 @@ func (t *Todo) AddProgress(title, desc string) {
 func (t *Todo) AddFinish(title, desc string) {
 	ts := time.Now()
 	date := fmt.Sprint(ts.Year, " ", ts.Month, " ", ts.Day)
+	fmt.Println(date)
 	(*t).Finish.Title = append((*t).Finish.Title, title)
 	(*t).Finish.Desc = append((*t).Finish.Desc, title)
 	(*t).Finish.Date = append((*t).Todo.Date, date)

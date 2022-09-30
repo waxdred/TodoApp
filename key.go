@@ -82,6 +82,7 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 	if m.projectActive {
 		m.todoActive = true
 		m.projectActive = false
+		m.Todo.GetTodo(m.projectList.list[m.projectList.index])
 		return m, nil
 	}
 	return m, nil

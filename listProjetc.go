@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -40,6 +41,7 @@ func (t *project) GetProjectSave() {
 }
 
 func (t *project) Add(title string) bool {
+	var todo Todo
 	path := fmt.Sprint(Path, title, ".json")
 	if !t.CmpTittle(title) {
 		return false
@@ -51,7 +53,8 @@ func (t *project) Add(title string) bool {
 		(*t).index = 0
 		_, err := os.Stat(path)
 		if os.IsNotExist(err) {
-			os.Create(path)
+			file, _ := json.MarshalIndent(&todo, "", " ")
+			ioutil.WriteFile(path, file, 0644)
 		}
 	}
 	return true

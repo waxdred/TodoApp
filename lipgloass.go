@@ -54,15 +54,21 @@ var (
 			Border(borderRadius).
 			Width(width/3).
 			Padding(0, 1).Margin(0, 1)
+	// select tab
 	tabTodoSelect       = tabTodoStyle.Copy().BorderForeground(lipgloss.Color(blue))
 	tabTodoSelectTop    = tabTodoSelect.Copy().BorderBottom(false)
 	tabTodoSelectMiddle = tabTodoSelect.Copy().BorderBottom(false).BorderTop(false)
 	tabTodoSelectBottom = tabTodoSelect.Copy().BorderTop(false)
 
-	tabTodoNoSelect    = tabTodoStyle.Copy().Height(height / 4).BorderForeground(highlight)
+	// no select tab
+	tabTodoNoSelect       = tabTodoStyle.Copy().BorderForeground(subtle)
+	tabTodoNoSelectTop    = tabTodoNoSelect.Copy().BorderBottom(false)
+	tabTodoNoSelectMiddle = tabTodoNoSelect.Copy().BorderBottom(false).BorderTop(false)
+	tabTodoNoSelectBottom = tabTodoNoSelect.Copy().BorderTop(false)
+
 	tabTodoStyleActive = tabTodoStyle.Copy().BorderForeground(lipgloss.Color(blue))
 	taskSelect         = lipgloss.NewStyle().Foreground(lipgloss.Color(blue))
-	taskNoSelect       = lipgloss.NewStyle().Foreground(highlight)
+	taskNoSelect       = lipgloss.NewStyle().Foreground(subtle)
 
 	// Description todo
 	DescriptionStyle = lipgloss.NewStyle().

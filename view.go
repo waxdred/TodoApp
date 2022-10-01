@@ -267,21 +267,23 @@ func todoView(m *Model, ret string) string {
 	)
 	gap := tabGap.Render(strings.Repeat(" ", max(0, lipgloss.Width(row)+(width))))
 	row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
+	if !m.textareaActive {
+		task := ViewTask(m.todoView)
+		gap = lipgloss.JoinHorizontal(lipgloss.Top, task[0], task[1], task[2])
+		row = lipgloss.JoinVertical(lipgloss.Top, row, gap)
+		// place Task
+		tasks := ViewTabTodo(m, m.Todo.Todo.Title, m.Todo.Progress.Title, m.Todo.Finish.Title, m.todoView)
 
-	// TODO add fonction for chose style
-	task := ViewTask(m.todoView)
-	gap = lipgloss.JoinHorizontal(lipgloss.Top, task[0], task[1], task[2])
-	row = lipgloss.JoinVertical(lipgloss.Top, row, gap)
-	// place Task
-	tasks := ViewTabTodo(m, m.Todo.Todo.Title, m.Todo.Progress.Title, m.Todo.Finish.Title, m.todoView)
-
-	row = lipgloss.JoinVertical(lipgloss.Top, row, tasks)
-	desc := ViewDesc(m.Todo.Todo, m)
-	row = lipgloss.JoinVertical(lipgloss.Top, row, desc)
-	helper := fmt.Sprint(
-		"\nAdd: <ctrl+a>   Modify: <ctrl+r>   Delete: <ctrl+d>   nav: arrow  Back to Project: <Esc>",
-	)
-	row = lipgloss.JoinVertical(lipgloss.Top, row, helper)
+		row = lipgloss.JoinVertical(lipgloss.Top, row, tasks)
+		desc := ViewDesc(m.Todo.Todo, m)
+		row = lipgloss.JoinVertical(lipgloss.Top, row, desc)
+		helper := fmt.Sprint(
+			"\nAdd: <ctrl+a>   Modify: <ctrl+r>   Delete: <ctrl+d>   nav: arrow  Back to Project: <Esc>",
+		)
+		row = lipgloss.JoinVertical(lipgloss.Top, row, helper)
+	} else if m.textareaActive {
+		return fmt.Sprintf("%s%s", row, ViewTextAre(m, "test"))
+	}
 	ret = fmt.Sprintf("%s", row)
 	return ret
 }

@@ -41,7 +41,11 @@ var (
 	// cursor
 	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 	cursorStyle  = focusedStyle.Copy()
-
+	// text area
+	TextStyleInput   = lipgloss.NewStyle().Foreground(subtle).Padding(1, 1)
+	TextStyle   = lipgloss.NewStyle().Foreground(subtle)
+	CursorStyle = lipgloss.NewStyle().Foreground(highlight)
+	CursorLine  = lipgloss.NewStyle().Foreground(lipgloss.Color("#bcbcbc"))
 	// spinner
 	spinStyle = lipgloss.NewStyle().Foreground(lipgloss.Color(blue))
 
@@ -188,5 +192,5 @@ func InitSizeWindow() (int, int) {
 	cmds[1] = strings.Replace(cmds[1], "\n", "", -1)
 	width, _ = strconv.Atoi(cmds[1])
 	height, _ = strconv.Atoi(cmds[0])
-	return width - 45, height
+	return width - 20, height - 4
 }

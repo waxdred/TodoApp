@@ -19,13 +19,15 @@ func main() {
 		// TODO: need change with touch up or down or /
 		typing: false,
 
-		projectActive: true,
-		projet:        activeTabStyle,
-		todoActive:    false,
-		todo:          tabStyle,
-		exitPopup:     false,
-		DeletePopup:   false,
-		AddPopup:      false,
+		projectActive:  true,
+		projet:         activeTabStyle,
+		todoActive:     false,
+		todo:           tabStyle,
+		exitPopup:      false,
+		DeletePopup:    false,
+		AddPopup:       false,
+		textarea:       InittextArea(),
+		textareaActive: false,
 	}
 
 	var t Todo

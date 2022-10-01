@@ -82,6 +82,10 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 		m.Todo.GetTodo(m.projectList.list[m.projectList.index])
 		return m, nil
 	}
+	if m.textareaActive {
+		tmp := m.textarea.Value()
+		m.textarea.SetValue(tmp + "\n")
+	}
 	return m, nil
 }
 
@@ -145,9 +149,11 @@ func up(m *Model) (tea.Model, tea.Cmd) {
 }
 
 func ctrla(m *Model) (tea.Model, tea.Cmd) {
-	if !m.projectAdd {
+	if !m.projectAdd && m.projectActive {
 		m.addbuffer.Blink()
 		m.projectAdd = true
+	} else if !m.textareaActive && m.todoActive {
+		m.textareaActive = true
 	}
 	return m, nil
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/charmbracelet/bubbles/spinner"
+	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -28,6 +29,9 @@ type Model struct {
 	DeletePopup    bool
 	AddPopup       bool
 	todoView       int
+	textarea       textarea.Model
+	msgtextarea    []string
+	textareaActive bool
 	err            error
 }
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -173,26 +174,19 @@ var (
 )
 
 func InitSizeWindow() (int, int) {
-	cmd := exec.Command("tmux", "display-message", "-p", "'#{pane_height}'")
+	var width, height int
+	cmd := exec.Command("stty", "size")
+	cmd.Stdin = os.Stdin
 
 	stdout, err := cmd.Output()
 	if err != nil {
 		return 0, 0
 	}
 	str := string(stdout)
-	str = strings.Replace(str, "'", "", 2)
-	str = strings.Replace(str, "\n", "", 1)
-	height, _ := strconv.Atoi(str)
-
-	cmd = exec.Command("tmux", "display-message", "-p", "'#{pane_width}'")
-
-	stdout, err = cmd.Output()
-	if err != nil {
-		return 0, 0
-	}
-	str = string(stdout)
-	str = strings.Replace(str, "'", "", 2)
-	str = strings.Replace(str, "\n", "", 1)
-	width, _ := strconv.Atoi(str)
+	cmds := strings.Split(str, " ")
+	cmds[0] = strings.Replace(cmds[0], "\n", "", -1)
+	cmds[1] = strings.Replace(cmds[1], "\n", "", -1)
+	width, _ = strconv.Atoi(cmds[1])
+	height, _ = strconv.Atoi(cmds[0])
 	return width - 45, height
 }

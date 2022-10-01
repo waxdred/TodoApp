@@ -87,7 +87,7 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 
 func down(m *Model) (tea.Model, tea.Cmd) {
 	if m.projectActive && !m.projectAdd && !m.projectRename && !m.typing {
-		if m.projectList.index > m.projectList.size {
+		if m.projectList.index >= m.projectList.size-1 {
 			m.projectList.index = 0
 		} else {
 			m.projectList.index++
@@ -116,8 +116,8 @@ func down(m *Model) (tea.Model, tea.Cmd) {
 
 func up(m *Model) (tea.Model, tea.Cmd) {
 	if m.projectActive && !m.projectAdd && !m.projectRename && !m.typing {
-		if m.projectList.index < 0 {
-			m.projectList.index = m.projectList.size
+		if m.projectList.index == 0 {
+			m.projectList.index = m.projectList.size - 1
 		} else {
 			m.projectList.index--
 		}

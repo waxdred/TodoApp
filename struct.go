@@ -31,12 +31,17 @@ type Model struct {
 	err            error
 }
 
+type info struct {
+	Title string `json:"title"`
+	Idx   int    `json:"idx"`
+}
+
 type Todolist struct {
-	Title []string `json:"title"`
-	Desc  []string `json:"desc"`
-	Date  []string `json:"date"`
-	Idx   int      `json:"idx"`
-	Len   int      `json:"len"`
+	Title []info `json:"title"`
+	Desc  []info `json:"desc"`
+	Date  []info `json:"date"`
+	Idx   int    `json:"idx"`
+	Len   int    `json:"len"`
 }
 
 type Todo struct {

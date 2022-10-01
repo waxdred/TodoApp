@@ -21,6 +21,77 @@ var user = os.Getenv("USER")
 
 var Path = fmt.Sprint("/Users/", user, "/.config/todo/")
 
+func (m Model) GetSelector(title info) bool {
+	if m.todoView == 0 && title.Idx == m.Todo.Todo.Idx+1 {
+		return true
+	} else if m.todoView == 1 && title.Idx == m.Todo.Progress.Idx+1 {
+		return true
+	} else if m.todoView == 2 && title.Idx == m.Todo.Finish.Idx+1 {
+		return true
+	}
+	return false
+}
+
+func (m Model) GetTilteDesc() string {
+	if m.todoView == 0 {
+		if m.Todo.Todo.Idx > m.Todo.Todo.Len || m.Todo.Todo.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Todo.Title[m.Todo.Todo.Idx].Title
+	} else if m.todoView == 1 {
+		if m.Todo.Progress.Idx > m.Todo.Progress.Len || m.Todo.Progress.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Progress.Title[m.Todo.Progress.Idx].Title
+	} else if m.todoView == 2 {
+		if m.Todo.Finish.Idx > m.Todo.Finish.Len || m.Todo.Finish.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Finish.Title[m.Todo.Finish.Idx].Title
+	}
+	return ""
+}
+
+func (m Model) GetDate() string {
+	if m.todoView == 0 {
+		if m.Todo.Todo.Idx > m.Todo.Todo.Len || m.Todo.Todo.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Todo.Date[m.Todo.Todo.Idx].Title
+	} else if m.todoView == 1 {
+		if m.Todo.Progress.Idx > m.Todo.Progress.Len || m.Todo.Progress.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Progress.Date[m.Todo.Progress.Idx].Title
+	} else if m.todoView == 2 {
+		if m.Todo.Finish.Idx > m.Todo.Finish.Len || m.Todo.Finish.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Finish.Date[m.Todo.Finish.Idx].Title
+	}
+	return ""
+}
+
+func (m Model) GetDesc() string {
+	if m.todoView == 0 {
+		if m.Todo.Todo.Idx > m.Todo.Todo.Len || m.Todo.Todo.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Todo.Desc[m.Todo.Todo.Idx].Title
+	} else if m.todoView == 1 {
+		if m.Todo.Progress.Idx > m.Todo.Progress.Len || m.Todo.Progress.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Progress.Desc[m.Todo.Progress.Idx].Title
+	} else if m.todoView == 2 {
+		if m.Todo.Finish.Idx > m.Todo.Finish.Len || m.Todo.Finish.Idx < 0 {
+			return ""
+		}
+		return m.Todo.Finish.Desc[m.Todo.Finish.Idx].Title
+	}
+	return ""
+}
+
 func (t *project) GetProjectSave() {
 	var file string
 	_, err := os.Stat(Path)
@@ -43,6 +114,7 @@ func (t *project) GetProjectSave() {
 func (t *project) Add(title string) bool {
 	var todo Todo
 	path := fmt.Sprint(Path, title, ".json")
+	todo.Project = title
 	if !t.CmpTittle(title) {
 		return false
 	}

@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -20,7 +18,7 @@ func left(m *Model) (tea.Model, tea.Cmd) {
 	if m.todoActive {
 		m.todoView--
 		if m.todoView < 0 {
-			m.todoView = 3
+			m.todoView = 2
 		}
 	}
 	return m, nil
@@ -57,7 +55,6 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 	if m.projectAdd {
 		m.projectAdd = false
 		ret := m.projectList.Add(m.addValue)
-		fmt.Println(ret)
 		if !ret {
 			m.AddPopup = true
 		}
@@ -95,6 +92,24 @@ func down(m *Model) (tea.Model, tea.Cmd) {
 		} else {
 			m.projectList.index++
 		}
+	} else if m.todoActive && m.todoView == 0 && m.Todo.Todo.Len > 1 {
+		if m.Todo.Todo.Idx >= m.Todo.Todo.Len-1 {
+			m.Todo.Todo.Idx = 0
+		} else {
+			m.Todo.Todo.Idx++
+		}
+	} else if m.todoActive && m.todoView == 1 && m.Todo.Progress.Len > 1 {
+		if m.Todo.Progress.Idx >= m.Todo.Progress.Len-1 {
+			m.Todo.Progress.Idx = 0
+		} else {
+			m.Todo.Progress.Idx++
+		}
+	} else if m.todoActive && m.todoView == 2 && m.Todo.Finish.Len > 1 {
+		if m.Todo.Finish.Idx >= m.Todo.Finish.Len-1 {
+			m.Todo.Finish.Idx = 0
+		} else {
+			m.Todo.Finish.Idx++
+		}
 	}
 	return m, nil
 }
@@ -106,7 +121,26 @@ func up(m *Model) (tea.Model, tea.Cmd) {
 		} else {
 			m.projectList.index--
 		}
+	} else if m.todoActive && m.todoView == 0 && m.Todo.Todo.Len > 1 {
+		if m.Todo.Todo.Idx == 0 {
+			m.Todo.Todo.Idx = m.Todo.Todo.Len - 1
+		} else {
+			m.Todo.Todo.Idx--
+		}
+	} else if m.todoActive && m.todoView == 1 && m.Todo.Progress.Len > 1 {
+		if m.Todo.Progress.Idx == 0 {
+			m.Todo.Progress.Idx = m.Todo.Progress.Len - 1
+		} else {
+			m.Todo.Progress.Idx--
+		}
+	} else if m.todoActive && m.todoView == 2 && m.Todo.Finish.Len > 1 {
+		if m.Todo.Finish.Idx == 0 {
+			m.Todo.Finish.Idx = m.Todo.Finish.Len - 1
+		} else {
+			m.Todo.Finish.Idx--
+		}
 	}
+
 	return m, nil
 }
 

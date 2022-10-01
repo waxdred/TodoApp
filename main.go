@@ -29,7 +29,6 @@ func main() {
 	}
 
 	var t Todo
-	t.GetTodo("Project")
 	initModel.Todo = t
 	errTea := tea.NewProgram(&initModel, tea.WithAltScreen()).Start()
 	if errTea != nil {

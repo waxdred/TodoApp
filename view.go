@@ -56,73 +56,89 @@ func ProjectActive(m *Model, row, header, ret string) string {
 }
 
 // TODO Work here need found better solution
-func ViewTodoRow(Select, noSelect, borderSelect, borderNoSelect lipgloss.Style, pos int, title ...string) string {
+func ViewTodoRow(m *Model, Select, noSelect, borderSelect, borderNoSelect lipgloss.Style, pos int, title ...info) string {
 	var row string
 
 	for i := 0; i < len(title); i++ {
 		if pos == 0 && i == 0 {
-			row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(Select.Render(title[i])))
+			if m.GetSelector(title[i]) {
+				row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(Select.Render(" > "+title[i].Title)))
+			} else {
+				row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(noSelect.Render("   "+title[i].Title)))
+			}
 		} else if pos == 1 && i == 1 {
-			row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(Select.Render(title[i])))
+			if m.GetSelector(title[i]) {
+				row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(Select.Render(" > "+title[i].Title)))
+			} else {
+				row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(noSelect.Render("   "+title[i].Title)))
+			}
 		} else if pos == 2 && i == 2 {
-			row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(Select.Render(title[i])))
+			if m.GetSelector(title[i]) {
+				row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(Select.Render(" > "+title[i].Title)))
+			} else {
+				row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderSelect.Render(noSelect.Render("   "+title[i].Title)))
+			}
 		} else {
-			row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderNoSelect.Render(noSelect.Render(title[i])))
+			row = lipgloss.JoinHorizontal(lipgloss.Top, row, borderNoSelect.Render(noSelect.Render("   "+title[i].Title)))
 		}
 	}
 	return row
 }
 
 func checkTitleRow(
+	m *Model,
 	Select, noSelect, borderSelect, borderNoSelect lipgloss.Style,
 	pos, i int,
 	sizes []int,
-	title ...[]string,
+	title ...[]info,
 ) string {
 	var row string
+	empty := info{
+		Title: " ",
+		Idx:   -1,
+	}
 	if i < sizes[0] && i < sizes[1] && i < sizes[2] {
-		row = ViewTodoRow(Select,
+		row = ViewTodoRow(m, Select,
 			noSelect,
 			borderSelect,
 			borderNoSelect,
-			pos, "  "+title[0][i], "  "+title[1][i], "  "+title[2][i])
-		// ret = lipgloss.JoinVertical(lipgloss.Top, ret, row)
+			pos, title[0][i], title[1][i], title[2][i])
 	} else if i >= sizes[0] && i < sizes[1] && i < sizes[2] {
-		row = ViewTodoRow(Select,
+		row = ViewTodoRow(m, Select,
 			noSelect,
 			borderSelect,
 			borderNoSelect,
-			pos, "  ", "  "+title[1][i], "  "+title[2][i])
+			pos, empty, title[1][i], title[2][i])
 	} else if i >= sizes[0] && i >= sizes[1] && i < sizes[2] {
-		row = ViewTodoRow(Select,
+		row = ViewTodoRow(m, Select,
 			noSelect,
 			borderSelect,
 			borderNoSelect,
-			pos, "  ", "  ", "  "+title[2][i])
+			pos, empty, empty, title[2][i])
 	} else if i < sizes[0] && i < sizes[1] && i >= sizes[2] {
-		row = ViewTodoRow(Select,
+		row = ViewTodoRow(m, Select,
 			noSelect,
 			borderSelect,
 			borderNoSelect,
-			pos, "  "+title[0][i], "  "+title[1][i], "  ")
+			pos, title[0][i], title[1][i], empty)
 	} else if i < sizes[0] && i >= sizes[1] && i >= sizes[2] {
-		row = ViewTodoRow(Select,
+		row = ViewTodoRow(m, Select,
 			noSelect,
 			borderSelect,
 			borderNoSelect,
-			pos, "  "+title[0][i], "  ", "  ")
+			pos, title[0][i], empty, empty)
 	} else if i >= sizes[0] && i < sizes[1] && i >= sizes[2] {
-		row = ViewTodoRow(Select,
+		row = ViewTodoRow(m, Select,
 			noSelect,
 			borderSelect,
 			borderNoSelect,
-			pos, "  ", "  "+title[1][i], "  ")
+			pos, empty, title[1][i], empty)
 	} else {
-		row = ViewTodoRow(Select,
+		row = ViewTodoRow(m, Select,
 			noSelect,
 			borderSelect,
 			borderNoSelect,
-			pos, "  ", "  ", "  ")
+			pos, empty, empty, empty)
 	}
 	return row
 }
@@ -154,7 +170,7 @@ func CompletedTab(ret string, pos int) string {
 	return ret
 }
 
-func ViewTabTodo(list, progress, finish []string, pos int) string {
+func ViewTabTodo(m *Model, list, progress, finish []info, pos int) string {
 	var ret string
 	var row string
 	sizes := []int{
@@ -165,7 +181,7 @@ func ViewTabTodo(list, progress, finish []string, pos int) string {
 	size := max(sizes[0], sizes[1])
 	size = max(size, sizes[2])
 	if size == 0 {
-		row = checkTitleRow(taskSelect,
+		row = checkTitleRow(m, taskSelect,
 			taskNoSelect,
 			tabTodoSelectTop,
 			tabTodoNoSelectTop,
@@ -174,14 +190,14 @@ func ViewTabTodo(list, progress, finish []string, pos int) string {
 	}
 	for i := 0; i < size; i++ {
 		if i == 0 {
-			row = checkTitleRow(taskSelect,
+			row = checkTitleRow(m, taskSelect,
 				taskNoSelect,
 				tabTodoSelectTop,
 				tabTodoNoSelectTop,
 				pos, i, sizes, list, progress, finish)
 			ret = lipgloss.JoinVertical(lipgloss.Top, ret, row)
 		} else if lipgloss.Height(ret) <= height/6 {
-			row = checkTitleRow(taskSelect,
+			row = checkTitleRow(m, taskSelect,
 				taskNoSelect,
 				tabTodoSelectMiddle,
 				tabTodoNoSelectMiddle,
@@ -194,17 +210,29 @@ func ViewTabTodo(list, progress, finish []string, pos int) string {
 }
 
 // TODO new work on
-func ViewDesc(todo interface{}, idx int) string {
+func ViewDesc(todo interface{}, m *Model) string {
 	todolist := todo.(Todolist)
-	desc := lipgloss.JoinVertical(lipgloss.Top, DescriptionSelectTop.Render(DescTiltleStyle.Render(todolist.Title[idx])))
-	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescNorStyle.Render("Description:")))
-	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescStyle.Render(todolist.Desc[idx])))
-	desc = lipgloss.JoinVertical(
-		lipgloss.Top,
-		desc,
-		DescriptionSelectMiddle.Render(DescNorStyle.Render("Creation date:")+DescDateStyle.Render(todolist.Date[idx])),
-	)
-	for lipgloss.Height(desc) <= height/4 {
+	var desc string
+	if todolist.Len == 0 {
+		desc = lipgloss.JoinVertical(lipgloss.Top, DescriptionSelectTop.Render(DescTiltleStyle.Render("")))
+		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescNorStyle.Render("Description:")))
+		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescStyle.Render("")))
+		desc = lipgloss.JoinVertical(
+			lipgloss.Top,
+			desc,
+			DescriptionSelectMiddle.Render(DescNorStyle.Render("Creation date:")+DescDateStyle.Render("")),
+		)
+	} else {
+		desc = lipgloss.JoinVertical(lipgloss.Top, DescriptionSelectTop.Render(DescTiltleStyle.Render(m.GetTilteDesc())))
+		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescNorStyle.Render("Description:")))
+		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescStyle.Render(m.GetDesc())))
+		desc = lipgloss.JoinVertical(
+			lipgloss.Top,
+			desc,
+			DescriptionSelectMiddle.Render(DescNorStyle.Render("Creation date:")+DescDateStyle.Render(m.GetDate())),
+		)
+	}
+	for lipgloss.Height(desc) <= height/5 {
 		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(" "))
 	}
 	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectBottom.Render(" "))
@@ -245,10 +273,10 @@ func todoView(m *Model, ret string) string {
 	gap = lipgloss.JoinHorizontal(lipgloss.Top, task[0], task[1], task[2])
 	row = lipgloss.JoinVertical(lipgloss.Top, row, gap)
 	// place Task
-	tasks := ViewTabTodo(m.Todo.Todo.Title, m.Todo.Progress.Title, m.Todo.Finish.Title, m.todoView)
+	tasks := ViewTabTodo(m, m.Todo.Todo.Title, m.Todo.Progress.Title, m.Todo.Finish.Title, m.todoView)
 
 	row = lipgloss.JoinVertical(lipgloss.Top, row, tasks)
-	desc := ViewDesc(m.Todo.Todo, 0)
+	desc := ViewDesc(m.Todo.Todo, m)
 	row = lipgloss.JoinVertical(lipgloss.Top, row, desc)
 	helper := fmt.Sprint(
 		"\nAdd: <ctrl+a>   Modify: <ctrl+r>   Delete: <ctrl+d>   nav: arrow  Back to Project: <Esc>",

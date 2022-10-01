@@ -8,31 +8,71 @@ import (
 	"time"
 )
 
+func leninfo(t []info) int {
+	return len(t)
+}
+
 func (t *Todo) AddTodo(title, desc string) {
 	ts := time.Now()
 	date := fmt.Sprint(ts.Year, " ", ts.Month, " ", ts.Day)
-	(*t).Todo.Title = append((*t).Todo.Title, title)
-	(*t).Todo.Desc = append((*t).Todo.Desc, title)
-	(*t).Todo.Date = append((*t).Todo.Date, date)
+	titles := info{
+		Title: title,
+		Idx:   len(t.Todo.Title),
+	}
+	descs := info{
+		Title: desc,
+		Idx:   len(t.Todo.Title),
+	}
+	dates := info{
+		Title: date,
+		Idx:   len(t.Todo.Title),
+	}
+	(*t).Todo.Title = append((*t).Todo.Title, titles)
+	(*t).Todo.Desc = append((*t).Todo.Desc, descs)
+	(*t).Todo.Date = append((*t).Todo.Date, dates)
 	(*t).Todo.Len++
 }
 
 func (t *Todo) AddProgress(title, desc string) {
 	ts := time.Now()
 	date := fmt.Sprint(ts.Year, " ", ts.Month, " ", ts.Day)
-	(*t).Progress.Title = append((*t).Progress.Title, title)
-	(*t).Progress.Desc = append((*t).Progress.Desc, title)
-	(*t).Progress.Date = append((*t).Todo.Date, date)
+	titles := info{
+		Title: title,
+		Idx:   len(t.Progress.Title),
+	}
+	descs := info{
+		Title: desc,
+		Idx:   len(t.Progress.Title),
+	}
+	dates := info{
+		Title: date,
+		Idx:   len(t.Progress.Title),
+	}
+
+	(*t).Progress.Title = append((*t).Progress.Title, titles)
+	(*t).Progress.Desc = append((*t).Progress.Desc, descs)
+	(*t).Progress.Date = append((*t).Todo.Date, dates)
 	(*t).Progress.Len++
 }
 
 func (t *Todo) AddFinish(title, desc string) {
 	ts := time.Now()
 	date := fmt.Sprint(ts.Year, " ", ts.Month, " ", ts.Day)
-	fmt.Println(date)
-	(*t).Finish.Title = append((*t).Finish.Title, title)
-	(*t).Finish.Desc = append((*t).Finish.Desc, title)
-	(*t).Finish.Date = append((*t).Todo.Date, date)
+	titles := info{
+		Title: title,
+		Idx:   len(t.Finish.Title),
+	}
+	descs := info{
+		Title: desc,
+		Idx:   len(t.Finish.Title),
+	}
+	dates := info{
+		Title: date,
+		Idx:   len(t.Finish.Title),
+	}
+	(*t).Finish.Title = append((*t).Finish.Title, titles)
+	(*t).Finish.Desc = append((*t).Finish.Desc, descs)
+	(*t).Finish.Date = append((*t).Todo.Date, dates)
 	(*t).Finish.Len++
 }
 
@@ -58,7 +98,7 @@ func (t *Todo) GetTodo(name string) {
 		if errBody != nil {
 			fmt.Println(errBody)
 		}
-		jsonErr := json.Unmarshal(body, t)
+		jsonErr := json.Unmarshal(body, &t)
 		if jsonErr != nil {
 			fmt.Println(jsonErr)
 		}

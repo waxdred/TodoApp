@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -195,6 +194,5 @@ func InitSizeWindow() (int, int) {
 	str = strings.Replace(str, "'", "", 2)
 	str = strings.Replace(str, "\n", "", 1)
 	width, _ := strconv.Atoi(str)
-	fmt.Println(width, " ", height)
 	return width - 45, height
 }

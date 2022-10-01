@@ -14,7 +14,7 @@ func leninfo(t []info) int {
 
 func (t *Todo) AddTodo(title, desc string) {
 	ts := time.Now()
-	date := fmt.Sprint(ts.Year, " ", ts.Month, " ", ts.Day)
+	date := ts.String()
 	titles := info{
 		Title: title,
 		Idx:   len(t.Todo.Title),
@@ -35,7 +35,7 @@ func (t *Todo) AddTodo(title, desc string) {
 
 func (t *Todo) AddProgress(title, desc string) {
 	ts := time.Now()
-	date := fmt.Sprint(ts.Year, " ", ts.Month, " ", ts.Day)
+	date := ts.String()
 	titles := info{
 		Title: title,
 		Idx:   len(t.Progress.Title),
@@ -57,7 +57,7 @@ func (t *Todo) AddProgress(title, desc string) {
 
 func (t *Todo) AddFinish(title, desc string) {
 	ts := time.Now()
-	date := fmt.Sprint(ts.Year, " ", ts.Month, " ", ts.Day)
+	date := ts.String()
 	titles := info{
 		Title: title,
 		Idx:   len(t.Finish.Title),

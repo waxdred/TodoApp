@@ -10,7 +10,7 @@ func InputInit(style lipgloss.Style, holder string) textinput.Model {
 	t := textinput.NewModel()
 	t.CharLimit = 30
 	t.CursorStyle = cursorStyle
-	t.TextStyle = style
+	// t.TextStyle = style
 	t.Placeholder = holder
 	t.Focus()
 	return t
@@ -24,8 +24,8 @@ func SpinInit(style lipgloss.Style) spinner.Model {
 }
 
 func Popup(text string) string {
-	ok := buttonStyle.Render(" ﬌ Enter")
-	cancel := buttonStyle.Render("  Esc")
+	ok := buttonStyleAdd.Render(" ﬌ Enter")
+	cancel := buttonStyleAdd.Render("  Esc")
 	question := lipgloss.NewStyle().Width(50).Align(lipgloss.Center).Render(text)
 	buttons := lipgloss.JoinHorizontal(lipgloss.Top, ok, "    ", cancel)
 	ui := lipgloss.JoinVertical(lipgloss.Center, question, buttons)

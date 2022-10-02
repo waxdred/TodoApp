@@ -12,20 +12,27 @@ func leninfo(t []info) int {
 	return len(t)
 }
 
+func (t *Todo) Addvalue(title, desc string, pos int) {
+	if pos == 0 {
+	} else if pos == 1 {
+	} else if pos == 2 {
+	}
+}
+
 func (t *Todo) AddTodo(title, desc string) {
 	ts := time.Now()
 	date := ts.String()
 	titles := info{
 		Title: title,
-		Idx:   len(t.Todo.Title),
+		Idx:   len(t.Todo.Title) + 1,
 	}
 	descs := info{
 		Title: desc,
-		Idx:   len(t.Todo.Title),
+		Idx:   len(t.Todo.Title) + 1,
 	}
 	dates := info{
 		Title: date,
-		Idx:   len(t.Todo.Title),
+		Idx:   len(t.Todo.Title) + 1,
 	}
 	(*t).Todo.Title = append((*t).Todo.Title, titles)
 	(*t).Todo.Desc = append((*t).Todo.Desc, descs)
@@ -38,15 +45,15 @@ func (t *Todo) AddProgress(title, desc string) {
 	date := ts.String()
 	titles := info{
 		Title: title,
-		Idx:   len(t.Progress.Title),
+		Idx:   len(t.Progress.Title) + 1,
 	}
 	descs := info{
 		Title: desc,
-		Idx:   len(t.Progress.Title),
+		Idx:   len(t.Progress.Title) + 1,
 	}
 	dates := info{
 		Title: date,
-		Idx:   len(t.Progress.Title),
+		Idx:   len(t.Progress.Title) + 1,
 	}
 
 	(*t).Progress.Title = append((*t).Progress.Title, titles)
@@ -60,15 +67,15 @@ func (t *Todo) AddFinish(title, desc string) {
 	date := ts.String()
 	titles := info{
 		Title: title,
-		Idx:   len(t.Finish.Title),
+		Idx:   len(t.Finish.Title) + 1,
 	}
 	descs := info{
 		Title: desc,
-		Idx:   len(t.Finish.Title),
+		Idx:   len(t.Finish.Title) + 1,
 	}
 	dates := info{
 		Title: date,
-		Idx:   len(t.Finish.Title),
+		Idx:   len(t.Finish.Title) + 1,
 	}
 	(*t).Finish.Title = append((*t).Finish.Title, titles)
 	(*t).Finish.Desc = append((*t).Finish.Desc, descs)
@@ -87,7 +94,6 @@ func (t *Todo) Update() {
 		fmt.Println("error:", err)
 	}
 	ioutil.WriteFile(path, file, 0644)
-	os.Stdout.Write(file)
 }
 
 func (t *Todo) GetTodo(name string) {

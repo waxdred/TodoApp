@@ -267,7 +267,7 @@ func todoView(m *Model, ret string) string {
 	)
 	gap := tabGap.Render(strings.Repeat(" ", max(0, lipgloss.Width(row)+(width))))
 	row = lipgloss.JoinHorizontal(lipgloss.Bottom, row, gap)
-	if !m.textareaActive {
+	if !m.PopTodo.textareaActive {
 		task := ViewTask(m.todoView)
 		gap = lipgloss.JoinHorizontal(lipgloss.Top, task[0], task[1], task[2])
 		row = lipgloss.JoinVertical(lipgloss.Top, row, gap)
@@ -281,7 +281,7 @@ func todoView(m *Model, ret string) string {
 			"\nAdd: <ctrl+a>   Modify: <ctrl+r>   Delete: <ctrl+d>   nav: arrow  Back to Project: <Esc>",
 		)
 		row = lipgloss.JoinVertical(lipgloss.Top, row, helper)
-	} else if m.textareaActive {
+	} else if m.PopTodo.textareaActive {
 		return fmt.Sprintf("%s%s", row, ViewTextAre(m, "test"))
 	}
 	ret = fmt.Sprintf("%s", row)

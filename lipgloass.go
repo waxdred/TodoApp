@@ -42,10 +42,10 @@ var (
 	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
 	cursorStyle  = focusedStyle.Copy()
 	// text area
-	TextStyleInput   = lipgloss.NewStyle().Foreground(subtle).Padding(1, 1)
-	TextStyle   = lipgloss.NewStyle().Foreground(subtle)
-	CursorStyle = lipgloss.NewStyle().Foreground(highlight)
-	CursorLine  = lipgloss.NewStyle().Foreground(lipgloss.Color("#bcbcbc"))
+	TextStyleInput = lipgloss.NewStyle().Foreground(subtle).Padding(1, 1)
+	TextStyle      = lipgloss.NewStyle().Foreground(subtle)
+	CursorStyle    = lipgloss.NewStyle().Foreground(highlight)
+	CursorLine     = lipgloss.NewStyle().Foreground(lipgloss.Color("#bcbcbc"))
 	// spinner
 	spinStyle = lipgloss.NewStyle().Foreground(lipgloss.Color(blue))
 
@@ -156,6 +156,16 @@ var (
 			BorderBottom(true)
 
 	buttonStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#FFF7DB")).
+			Background(lipgloss.Color("#888B7E")).
+			BorderBackground(lipgloss.Color("#888B7E")).
+			Padding(0, 3).Margin(1, 3)
+	buttonStyleSelect = lipgloss.NewStyle().
+				Foreground(lipgloss.Color(blue)).
+				Background(lipgloss.Color("#888B7E")).
+				BorderBackground(lipgloss.Color("#888B7E")).
+				Padding(0, 3).Margin(1, 3)
+	buttonStyleAdd = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FFF7DB")).
 			Background(lipgloss.Color("#888B7E")).
 			BorderBackground(lipgloss.Color("#888B7E")).

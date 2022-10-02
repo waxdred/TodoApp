@@ -29,12 +29,21 @@ type Model struct {
 	DeletePopup    bool
 	AddPopup       bool
 	todoView       int
-	textarea       textarea.Model
-	msgtextarea    []string
-	textareaActive bool
-	err            error
+
+	PopTodo PopTodo
+	err     error
 }
 
+type PopTodo struct {
+	textarea       textarea.Model
+	input          textinput.Model
+	inputmsg       string
+	msgtextarea    string
+	textareaActive bool
+	inputActive    bool
+	textActive     bool
+	confirm        int
+}
 type info struct {
 	Title string `json:"title"`
 	Idx   int    `json:"idx"`

@@ -11,11 +11,11 @@ import (
 )
 
 func (m *Model) Init() tea.Cmd {
-	// if m.typing || m.projectAdd || m.projectRename {
-	// 	return textinput.Blink
-	// } else if m.textareaActive {
-	// 	return textarea.Blink
-	// }
+	if m.typing || m.projectAdd || m.projectRename {
+		return textinput.Blink
+	} else if m.PopTodo.textareaActive {
+		return textarea.Blink
+	}
 	return tea.Batch(textarea.Blink, textinput.Blink, spinner.Tick)
 }
 
@@ -35,8 +35,27 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			esc(m)
 		case "enter":
 			return enter(m)
-		case "tab", "down", "j":
-			down(m)
+		case "tab":
+			if m.PopTodo.textareaActive {
+				if m.PopTodo.inputActive {
+					m.PopTodo.inputActive = false
+					m.PopTodo.textActive = true
+					m.PopTodo.input.TextStyle = TextStyleInput
+					m.PopTodo.input.SetCursor(0)
+					m.PopTodo.input.CursorStyle = TextStyleInput
+					m.PopTodo.textarea.Focus()
+					m.PopTodo.confirm = 1
+				} else if m.PopTodo.textActive {
+					m.PopTodo.inputActive = false
+					m.PopTodo.textActive = false
+					m.PopTodo.confirm = 2
+				} else if m.PopTodo.confirm == 2 {
+					m.PopTodo.confirm = 3
+				} else if m.PopTodo.confirm == 3 {
+					m.PopTodo.confirm = 0
+					m.PopTodo.inputActive = true
+				}
+			}
 		case "up", "k":
 			up(m)
 		case "ctrl+a":
@@ -52,12 +71,16 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return ActiveProjectAdd(m, msg)
 		} else if m.projectRename {
 			return ActiveProjectRename(m, msg)
-		} else if m.textareaActive {
-			m.textarea, _ = m.textarea.Update(msg)
+		} else if m.PopTodo.textareaActive {
+			if m.PopTodo.textActive {
+				m.PopTodo.textarea, _ = m.PopTodo.textarea.Update(msg)
+			} else if m.PopTodo.inputActive {
+				return ActiveInput(m, msg)
+			}
 		}
 	default:
-		if !m.textarea.Focused() {
-			cmd := m.textarea.Focus()
+		if !m.PopTodo.textarea.Focused() {
+			cmd := m.PopTodo.textarea.Focus()
 			return m, cmd
 		}
 		return Defatul(m, msg)

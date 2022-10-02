@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -82,9 +84,30 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 		m.Todo.GetTodo(m.projectList.list[m.projectList.index])
 		return m, nil
 	}
-	if m.textareaActive {
-		tmp := m.textarea.Value()
-		m.textarea.SetValue(tmp + "\n")
+	if m.PopTodo.textareaActive && m.PopTodo.inputActive && m.PopTodo.confirm == 0 {
+		m.PopTodo.inputActive = false
+		m.PopTodo.textActive = true
+		m.PopTodo.input.TextStyle = TextStyleInput
+		m.PopTodo.input.SetCursor(0)
+		m.PopTodo.input.CursorStyle = TextStyleInput
+		m.PopTodo.textarea.Focus()
+		m.PopTodo.textarea.Placeholder = ""
+		m.PopTodo.confirm = 1
+	} else if m.PopTodo.textareaActive && m.PopTodo.textActive && m.PopTodo.confirm == 1 {
+		tmp := m.PopTodo.textarea.Value()
+		m.PopTodo.textarea.SetValue(tmp + "\n")
+	} else if m.PopTodo.confirm == 2 {
+		m.PopTodo.inputActive = false
+		m.PopTodo.textareaActive = false
+		if m.todoView == 0 {
+			m.Todo.AddTodo(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
+		} else if m.todoView == 1 {
+			m.Todo.AddProgress(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
+		} else if m.todoView == 2 {
+			m.Todo.AddFinish(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
+		}
+		m.Todo.Update()
+		fmt.Println(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
 	}
 	return m, nil
 }
@@ -152,8 +175,12 @@ func ctrla(m *Model) (tea.Model, tea.Cmd) {
 	if !m.projectAdd && m.projectActive {
 		m.addbuffer.Blink()
 		m.projectAdd = true
-	} else if !m.textareaActive && m.todoActive {
-		m.textareaActive = true
+	} else if !m.PopTodo.textareaActive && m.todoActive {
+		m.PopTodo.textareaActive = true
+		m.PopTodo.inputActive = true
+		m.PopTodo.textActive = false
+		m.PopTodo.textarea.Reset()
+		m.PopTodo.input.Focus()
 	}
 	return m, nil
 }
@@ -179,6 +206,16 @@ func ActiveProjectSelect(m *Model, msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.search, cmd = m.search.Update(msg)
 	if m.search.Value() != "" {
 		m.searchValue = m.search.Value()
+	}
+	return m, cmd
+}
+
+func ActiveInput(m *Model, msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
+
+	m.PopTodo.input, cmd = m.PopTodo.input.Update(msg)
+	if m.PopTodo.input.Value() != "" {
+		m.PopTodo.inputmsg = m.PopTodo.input.Value()
 	}
 	return m, cmd
 }

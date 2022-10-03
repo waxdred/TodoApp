@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -107,7 +105,6 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 			m.Todo.AddFinish(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
 		}
 		m.Todo.Update()
-		fmt.Println(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
 	}
 	return m, nil
 }
@@ -120,19 +117,19 @@ func down(m *Model) (tea.Model, tea.Cmd) {
 			m.projectList.index++
 		}
 	} else if m.todoActive && m.todoView == 0 && m.Todo.Todo.Len > 1 {
-		if m.Todo.Todo.Idx >= m.Todo.Todo.Len-1 {
+		if m.Todo.Todo.Idx == m.Todo.Todo.Len-1 {
 			m.Todo.Todo.Idx = 0
 		} else {
 			m.Todo.Todo.Idx++
 		}
 	} else if m.todoActive && m.todoView == 1 && m.Todo.Progress.Len > 1 {
-		if m.Todo.Progress.Idx >= m.Todo.Progress.Len-1 {
+		if m.Todo.Progress.Idx == m.Todo.Progress.Len-1 {
 			m.Todo.Progress.Idx = 0
 		} else {
 			m.Todo.Progress.Idx++
 		}
 	} else if m.todoActive && m.todoView == 2 && m.Todo.Finish.Len > 1 {
-		if m.Todo.Finish.Idx >= m.Todo.Finish.Len-1 {
+		if m.Todo.Finish.Idx == m.Todo.Finish.Len-1 {
 			m.Todo.Finish.Idx = 0
 		} else {
 			m.Todo.Finish.Idx++
@@ -176,6 +173,7 @@ func ctrla(m *Model) (tea.Model, tea.Cmd) {
 		m.addbuffer.Blink()
 		m.projectAdd = true
 	} else if !m.PopTodo.textareaActive && m.todoActive {
+		m.PopTodo.input.Reset()
 		m.PopTodo.textareaActive = true
 		m.PopTodo.inputActive = true
 		m.PopTodo.textActive = false
@@ -196,6 +194,7 @@ func ctrlr(m *Model) (tea.Model, tea.Cmd) {
 func ctrld(m *Model) (tea.Model, tea.Cmd) {
 	if m.projectActive && !m.projectAdd && !m.projectRename && !m.typing {
 		m.DeletePopup = true
+	} else if m.todoActive {
 	}
 	return m, nil
 }

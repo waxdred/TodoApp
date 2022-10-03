@@ -56,6 +56,8 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.PopTodo.inputActive = true
 				}
 			}
+		case "down", "j":
+			down(m)
 		case "up", "k":
 			up(m)
 		case "ctrl+a":

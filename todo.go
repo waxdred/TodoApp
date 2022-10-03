@@ -37,7 +37,11 @@ func (t *Todo) AddTodo(title, desc string) {
 	(*t).Todo.Title = append((*t).Todo.Title, titles)
 	(*t).Todo.Desc = append((*t).Todo.Desc, descs)
 	(*t).Todo.Date = append((*t).Todo.Date, dates)
-	(*t).Todo.Len++
+	if (*t).Todo.Len == -1 {
+		(*t).Todo.Len = 1
+	} else {
+		(*t).Todo.Len++
+	}
 }
 
 func (t *Todo) AddProgress(title, desc string) {
@@ -59,7 +63,11 @@ func (t *Todo) AddProgress(title, desc string) {
 	(*t).Progress.Title = append((*t).Progress.Title, titles)
 	(*t).Progress.Desc = append((*t).Progress.Desc, descs)
 	(*t).Progress.Date = append((*t).Todo.Date, dates)
-	(*t).Progress.Len++
+	if (*t).Progress.Len == -1 {
+		(*t).Progress.Len = 1
+	} else {
+		(*t).Progress.Len++
+	}
 }
 
 func (t *Todo) AddFinish(title, desc string) {
@@ -80,8 +88,26 @@ func (t *Todo) AddFinish(title, desc string) {
 	(*t).Finish.Title = append((*t).Finish.Title, titles)
 	(*t).Finish.Desc = append((*t).Finish.Desc, descs)
 	(*t).Finish.Date = append((*t).Todo.Date, dates)
-	(*t).Finish.Len++
+	if (*t).Finish.Len == -1 {
+		(*t).Finish.Len = 1
+	} else {
+		(*t).Finish.Len++
+	}
 }
+
+// TODO need for on the Delete Method
+// func (t *Todo) Delete(idx, pos int) {
+// 	var todo Todolist
+// 	if pos == 0 {
+// 		for _, todo := range (*t).Todo.Title {
+// 			if todo.Idx != idx {
+// 				todo.Title = append(todo.Title, todo)
+// 			}
+// 		}
+// 	} else if pos == 1 {
+// 	} else if pos == 2 {
+// 	}
+// }
 
 func (t *Todo) AddProject(name string) {
 	(*t).Project = name

@@ -74,17 +74,17 @@ func (m Model) GetDate() string {
 
 func (m Model) GetDesc() string {
 	if m.todoView == 0 {
-		if m.Todo.Todo.Idx > m.Todo.Todo.Len || m.Todo.Todo.Idx < 0 {
+		if m.Todo.Todo.Idx > m.Todo.Todo.Len || m.Todo.Todo.Idx < 1 {
 			return ""
 		}
 		return m.Todo.Todo.Desc[m.Todo.Todo.Idx].Title
 	} else if m.todoView == 1 {
-		if m.Todo.Progress.Idx > m.Todo.Progress.Len || m.Todo.Progress.Idx < 0 {
+		if m.Todo.Progress.Idx > m.Todo.Progress.Len || m.Todo.Progress.Idx < 1 {
 			return ""
 		}
 		return m.Todo.Progress.Desc[m.Todo.Progress.Idx].Title
 	} else if m.todoView == 2 {
-		if m.Todo.Finish.Idx > m.Todo.Finish.Len || m.Todo.Finish.Idx < 0 {
+		if m.Todo.Finish.Idx > m.Todo.Finish.Len || m.Todo.Finish.Idx < 1 {
 			return ""
 		}
 		return m.Todo.Finish.Desc[m.Todo.Finish.Idx].Title
@@ -113,13 +113,16 @@ func (t *project) GetProjectSave() {
 
 func (t *project) Add(title string) bool {
 	var todo Todo
+	title = strings.Replace(title, " ", "_", -1)
 	path := fmt.Sprint(Path, title, ".json")
 	todo.Project = title
+	todo.Todo.Len = -1
+	todo.Progress.Len = -1
+	todo.Finish.Len = -1
 	if !t.CmpTittle(title) {
 		return false
 	}
 	if title != "" {
-		title = strings.Replace(title, " ", "_", -1)
 		(*t).list = append((*t).list, title)
 		(*t).size++
 		(*t).index = 0

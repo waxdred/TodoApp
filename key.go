@@ -195,7 +195,15 @@ func ctrld(m *Model) (tea.Model, tea.Cmd) {
 	if m.projectActive && !m.projectAdd && !m.projectRename && !m.typing {
 		m.DeletePopup = true
 	} else if m.todoActive {
+		if m.todoView == 0 {
+			m.Todo.Delete(m.Todo.Todo.Idx+1, m.todoView)
+		} else if m.todoView == 1 {
+			m.Todo.Delete(m.Todo.Progress.Idx+1, m.todoView)
+		} else if m.todoView == 2 {
+			m.Todo.Delete(m.Todo.Finish.Idx+1, m.todoView)
+		}
 	}
+	m.Todo.Update()
 	return m, nil
 }
 

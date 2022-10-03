@@ -95,19 +95,32 @@ func (t *Todo) AddFinish(title, desc string) {
 	}
 }
 
-// TODO need for on the Delete Method
-// func (t *Todo) Delete(idx, pos int) {
-// 	var todo Todolist
-// 	if pos == 0 {
-// 		for _, todo := range (*t).Todo.Title {
-// 			if todo.Idx != idx {
-// 				todo.Title = append(todo.Title, todo)
-// 			}
-// 		}
-// 	} else if pos == 1 {
-// 	} else if pos == 2 {
-// 	}
-// }
+// TODO need for on the Delete Method need work on because is segfautl
+func (t *Todo) Delete(idx, pos int) {
+	var todo Todo
+	if pos == 0 {
+		for i := 0; i < len((*t).Todo.Title); i++ {
+			if (*t).Todo.Title[i].Idx != idx {
+				todo.AddTodo((*t).Todo.Title[i].Title, (*t).Todo.Desc[i].Title)
+			}
+		}
+		(*t).Todo = todo.Todo
+	} else if pos == 1 {
+		for i := 0; i < len((*t).Progress.Title); i++ {
+			if (*t).Progress.Title[i].Idx != idx {
+				todo.AddProgress((*t).Progress.Title[i].Title, (*t).Progress.Desc[i].Title)
+			}
+		}
+		(*t).Progress = todo.Progress
+	} else if pos == 2 {
+		for i := 0; i < len((*t).Finish.Title); i++ {
+			if (*t).Finish.Title[i].Idx != idx {
+				todo.AddFinish((*t).Finish.Title[i].Title, (*t).Finish.Desc[i].Title)
+			}
+		}
+		(*t).Finish = todo.Finish
+	}
+}
 
 func (t *Todo) AddProject(name string) {
 	(*t).Project = name

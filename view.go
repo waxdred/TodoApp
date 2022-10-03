@@ -232,9 +232,10 @@ func ViewDesc(todo interface{}, m *Model) string {
 			DescriptionSelectMiddle.Render(DescNorStyle.Render("Creation date:")+DescDateStyle.Render(m.GetDate())),
 		)
 	}
-	for lipgloss.Height(desc) <= height/5 {
+	for lipgloss.Height(desc) <= height/4 {
 		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(" "))
 	}
+	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(" "))
 	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectBottom.Render(" "))
 	return desc
 }
@@ -278,7 +279,7 @@ func todoView(m *Model, ret string) string {
 		desc := ViewDesc(m.Todo.Todo, m)
 		row = lipgloss.JoinVertical(lipgloss.Top, row, desc)
 		helper := fmt.Sprint(
-			"\nAdd: <ctrl+a>   Modify: <ctrl+r>   Delete: <ctrl+d>   nav: arrow  Back to Project: <Esc>",
+			"\nAdd: <ctrl+a>   Modify: <ctrl+r>   Delete: <ctrl+d>  Move to: todo <ctrl+t> | progress <ctrl+p> | finish <ctrl+f> Back to Project: <Esc>",
 		)
 		row = lipgloss.JoinVertical(lipgloss.Top, row, helper)
 	} else if m.PopTodo.textareaActive {

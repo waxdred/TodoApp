@@ -111,6 +111,15 @@ func (t *project) GetProjectSave() {
 	}
 }
 
+func InitTodo(title string) Todo {
+	var todo Todo
+	todo.Project = title
+	todo.Todo.Len = -1
+	todo.Progress.Len = -1
+	todo.Finish.Len = -1
+	return todo
+}
+
 func (t *project) Add(title string) bool {
 	var todo Todo
 	title = strings.Replace(title, " ", "_", -1)

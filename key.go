@@ -24,6 +24,51 @@ func left(m *Model) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
+func ctrlp(m *Model) (tea.Model, tea.Cmd) {
+	if m.todoActive && m.todoView != 1 {
+		if m.todoView == 0 {
+			m.Todo.AddProgress(m.Todo.Todo.Title[m.Todo.Todo.Idx].Title, m.Todo.Todo.Desc[m.Todo.Todo.Idx].Title)
+			m.Todo.Delete(m.Todo.Todo.Idx+1, m.todoView)
+			m.Todo.Update()
+		} else if m.todoView == 2 {
+			m.Todo.AddProgress(m.Todo.Finish.Title[m.Todo.Finish.Idx].Title, m.Todo.Finish.Desc[m.Todo.Finish.Idx].Title)
+			m.Todo.Delete(m.Todo.Finish.Idx+1, m.todoView)
+			m.Todo.Update()
+		}
+	}
+	return m, nil
+}
+
+func ctrlt(m *Model) (tea.Model, tea.Cmd) {
+	if m.todoActive && m.todoView != 0 {
+		if m.todoView == 1 {
+			m.Todo.AddTodo(m.Todo.Progress.Title[m.Todo.Progress.Idx].Title, m.Todo.Progress.Desc[m.Todo.Progress.Idx].Title)
+			m.Todo.Delete(m.Todo.Progress.Idx+1, m.todoView)
+			m.Todo.Update()
+		} else if m.todoView == 2 {
+			m.Todo.AddTodo(m.Todo.Finish.Title[m.Todo.Finish.Idx].Title, m.Todo.Finish.Desc[m.Todo.Finish.Idx].Title)
+			m.Todo.Delete(m.Todo.Finish.Idx+1, m.todoView)
+			m.Todo.Update()
+		}
+	}
+	return m, nil
+}
+
+func ctrlf(m *Model) (tea.Model, tea.Cmd) {
+	if m.todoActive && m.todoView != 0 {
+		if m.todoView == 0 {
+			m.Todo.AddFinish(m.Todo.Todo.Title[m.Todo.Todo.Idx].Title, m.Todo.Todo.Desc[m.Todo.Todo.Idx].Title)
+			m.Todo.Delete(m.Todo.Todo.Idx+1, m.todoView)
+			m.Todo.Update()
+		} else if m.todoView == 1 {
+			m.Todo.AddFinish(m.Todo.Progress.Title[m.Todo.Progress.Idx].Title, m.Todo.Progress.Desc[m.Todo.Progress.Idx].Title)
+			m.Todo.Delete(m.Todo.Progress.Idx+1, m.todoView)
+			m.Todo.Update()
+		}
+	}
+	return m, nil
+}
+
 func esc(m *Model) (tea.Model, tea.Cmd) {
 	if m.typing {
 		m.typing = false
@@ -35,6 +80,8 @@ func esc(m *Model) (tea.Model, tea.Cmd) {
 		m.AddPopup = false
 	} else if m.projectRename {
 		m.projectRename = false
+	} else if m.todoActive && m.DeletePopup {
+		m.DeletePopup = false
 	} else if m.todoActive {
 		m.todoActive = false
 		m.projectActive = true
@@ -71,9 +118,21 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 		m.renamebuffer.Reset()
 		return m, nil
 	}
-	if m.DeletePopup {
+	if m.DeletePopup && !m.todoActive {
 		m.projectList.Delete(m.projectList.index)
 		m.DeletePopup = false
+		return m, nil
+	} else if m.DeletePopup && m.todoActive {
+		if m.todoView == 0 {
+			m.DeletePopup = false
+			m.Todo.Delete(m.Todo.Todo.Idx+1, m.todoView)
+		} else if m.todoView == 1 {
+			m.DeletePopup = false
+			m.Todo.Delete(m.Todo.Progress.Idx+1, m.todoView)
+		} else if m.todoView == 2 {
+			m.DeletePopup = false
+			m.Todo.Delete(m.Todo.Finish.Idx+1, m.todoView)
+		}
 		return m, nil
 	}
 	if m.projectActive {
@@ -195,13 +254,7 @@ func ctrld(m *Model) (tea.Model, tea.Cmd) {
 	if m.projectActive && !m.projectAdd && !m.projectRename && !m.typing {
 		m.DeletePopup = true
 	} else if m.todoActive {
-		if m.todoView == 0 {
-			m.Todo.Delete(m.Todo.Todo.Idx+1, m.todoView)
-		} else if m.todoView == 1 {
-			m.Todo.Delete(m.Todo.Progress.Idx+1, m.todoView)
-		} else if m.todoView == 2 {
-			m.Todo.Delete(m.Todo.Finish.Idx+1, m.todoView)
-		}
+		m.DeletePopup = true
 	}
 	m.Todo.Update()
 	return m, nil

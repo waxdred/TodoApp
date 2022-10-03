@@ -97,7 +97,7 @@ func (t *Todo) AddFinish(title, desc string) {
 
 // TODO need for on the Delete Method need work on because is segfautl
 func (t *Todo) Delete(idx, pos int) {
-	var todo Todo
+	todo := InitTodo((*&t.Project))
 	if pos == 0 {
 		for i := 0; i < len((*t).Todo.Title); i++ {
 			if (*t).Todo.Title[i].Idx != idx {

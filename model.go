@@ -30,11 +30,19 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "left":
 			return left(m)
 		case "ctrl+f":
-			m.typing = true
+			if m.todoActive {
+				return ctrlf(m)
+			} else {
+				m.typing = true
+			}
+		case "ctrl+t":
+			return ctrlt(m)
 		case "esc":
 			esc(m)
 		case "enter":
 			return enter(m)
+		case "ctrl+p":
+			return ctrlp(m)
 		case "tab":
 			if m.PopTodo.textareaActive {
 				if m.PopTodo.inputActive {

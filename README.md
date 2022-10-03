@@ -15,6 +15,8 @@ https://github.com/waxdred/TodoApp.git todo
 ~/.config/todo/
 ```
 
+## Todo App 
+![](./assets/Screen.gif)
 ## Project manager
 ![Screenshot](./assets/Projet.png)
 

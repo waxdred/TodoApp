@@ -20,7 +20,7 @@ func InittextArea() PopTodo {
 	}
 	ta.Prompt = "┃ "
 	ta.CharLimit = 280
-	ta.SetWidth(width / 3)
+	ta.SetWidth(width / 5)
 	ta.SetHeight(5)
 	ta.ShowLineNumbers = true
 	return PopTodo{

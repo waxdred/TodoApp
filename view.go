@@ -133,6 +133,12 @@ func checkTitleRow(
 			borderSelect,
 			borderNoSelect,
 			pos, empty, title[1][i], empty)
+	} else if i < sizes[0] && i >= sizes[1] && i < sizes[2] {
+		row = ViewTodoRow(m, Select,
+			noSelect,
+			borderSelect,
+			borderNoSelect,
+			pos, title[0][i], empty, title[2][i])
 	} else {
 		row = ViewTodoRow(m, Select,
 			noSelect,
@@ -209,19 +215,25 @@ func ViewTabTodo(m *Model, list, progress, finish []info, pos int) string {
 	return ret
 }
 
-// TODO new work on
-func ViewDesc(todo interface{}, m *Model) string {
-	todolist := todo.(Todolist)
+func emptyDesc(desc string) string {
+	desc = lipgloss.JoinVertical(lipgloss.Top, DescriptionSelectTop.Render(DescTiltleStyle.Render("")))
+	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescNorStyle.Render("Description:")))
+	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescStyle.Render("")))
+	desc = lipgloss.JoinVertical(
+		lipgloss.Top,
+		desc,
+		DescriptionSelectMiddle.Render(DescNorStyle.Render("Creation date:")+DescDateStyle.Render("")))
+	return desc
+}
+
+func ViewDesc(m *Model, todo ...interface{}) string {
 	var desc string
-	if todolist.Len == 0 {
-		desc = lipgloss.JoinVertical(lipgloss.Top, DescriptionSelectTop.Render(DescTiltleStyle.Render("")))
-		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescNorStyle.Render("Description:")))
-		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescStyle.Render("")))
-		desc = lipgloss.JoinVertical(
-			lipgloss.Top,
-			desc,
-			DescriptionSelectMiddle.Render(DescNorStyle.Render("Creation date:")+DescDateStyle.Render("")),
-		)
+	if m.todoView == 0 && m.Todo.Todo.Len == 0 {
+		desc = emptyDesc(desc)
+	} else if m.todoView == 1 && m.Todo.Progress.Len == 0 {
+		desc = emptyDesc(desc)
+	} else if m.todoView == 2 && m.Todo.Finish.Len == 0 {
+		desc = emptyDesc(desc)
 	} else {
 		desc = lipgloss.JoinVertical(lipgloss.Top, DescriptionSelectTop.Render(DescTiltleStyle.Render(m.GetTilteDesc())))
 		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(DescNorStyle.Render("Description:")))
@@ -232,10 +244,9 @@ func ViewDesc(todo interface{}, m *Model) string {
 			DescriptionSelectMiddle.Render(DescNorStyle.Render("Creation date:")+DescDateStyle.Render(m.GetDate())),
 		)
 	}
-	for lipgloss.Height(desc) <= height/4 {
+	for lipgloss.Height(desc) <= height/6 {
 		desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(" "))
 	}
-	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectMiddle.Render(" "))
 	desc = lipgloss.JoinVertical(lipgloss.Top, desc, DescriptionSelectBottom.Render(" "))
 	return desc
 }
@@ -276,9 +287,9 @@ func todoView(m *Model, ret string) string {
 		tasks := ViewTabTodo(m, m.Todo.Todo.Title, m.Todo.Progress.Title, m.Todo.Finish.Title, m.todoView)
 
 		row = lipgloss.JoinVertical(lipgloss.Top, row, tasks)
-		desc := ViewDesc(m.Todo.Todo, m)
+		desc := ViewDesc(m, m.Todo.Todo, m.Todo.Progress, m.Todo.Finish)
 		row = lipgloss.JoinVertical(lipgloss.Top, row, desc)
-		helper := fmt.Sprint(
+		helper := helpStyle.Render(
 			"\nAdd: <ctrl+a>   Modify: <ctrl+r>   Delete: <ctrl+d>  Move to: todo <ctrl+t> | progress <ctrl+p> | finish <ctrl+f> Back to Project: <Esc>",
 		)
 		row = lipgloss.JoinVertical(lipgloss.Top, row, helper)

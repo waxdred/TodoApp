@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
@@ -55,7 +56,7 @@ func ctrlt(m *Model) (tea.Model, tea.Cmd) {
 }
 
 func ctrlf(m *Model) (tea.Model, tea.Cmd) {
-	if m.todoActive && m.todoView != 0 {
+	if m.todoActive && m.todoView != 2 {
 		if m.todoView == 0 {
 			m.Todo.AddFinish(m.Todo.Todo.Title[m.Todo.Todo.Idx].Title, m.Todo.Todo.Desc[m.Todo.Todo.Idx].Title)
 			m.Todo.Delete(m.Todo.Todo.Idx+1, m.todoView)
@@ -133,6 +134,7 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 			m.DeletePopup = false
 			m.Todo.Delete(m.Todo.Finish.Idx+1, m.todoView)
 		}
+		m.Todo.Update()
 		return m, nil
 	}
 	if m.projectActive {
@@ -147,23 +149,29 @@ func enter(m *Model) (tea.Model, tea.Cmd) {
 		m.PopTodo.input.TextStyle = TextStyleInput
 		m.PopTodo.input.SetCursor(0)
 		m.PopTodo.input.CursorStyle = TextStyleInput
+		m.PopTodo.textarea.Cursor.Style = cursorStyle
 		m.PopTodo.textarea.Focus()
-		m.PopTodo.textarea.Placeholder = ""
+		m.PopTodo.textarea.Cursor.Blur()
+		m.PopTodo.textarea.Placeholder = " "
+		textarea.Blink()
 		m.PopTodo.confirm = 1
 	} else if m.PopTodo.textareaActive && m.PopTodo.textActive && m.PopTodo.confirm == 1 {
 		tmp := m.PopTodo.textarea.Value()
 		m.PopTodo.textarea.SetValue(tmp + "\n")
-	} else if m.PopTodo.confirm == 2 {
+	} else if m.PopTodo.textareaActive && m.PopTodo.confirm == 2 {
 		m.PopTodo.inputActive = false
 		m.PopTodo.textareaActive = false
-		if m.todoView == 0 {
+		if m.todoView == 0 && m.PopTodo.input.Value() != "" {
 			m.Todo.AddTodo(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
-		} else if m.todoView == 1 {
+		} else if m.todoView == 1 && m.PopTodo.input.Value() != "" {
 			m.Todo.AddProgress(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
-		} else if m.todoView == 2 {
+		} else if m.todoView == 2 && m.PopTodo.input.Value() != "" {
 			m.Todo.AddFinish(m.PopTodo.inputmsg, m.PopTodo.textarea.Value())
 		}
 		m.Todo.Update()
+	} else if m.PopTodo.textareaActive && m.PopTodo.confirm == 3 {
+		m.PopTodo.inputActive = false
+		m.PopTodo.textareaActive = false
 	}
 	return m, nil
 }

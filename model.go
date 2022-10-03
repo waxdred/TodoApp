@@ -20,6 +20,7 @@ func (m *Model) Init() tea.Cmd {
 }
 
 func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	width, height = InitSizeWindow()
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -48,18 +49,24 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if m.PopTodo.inputActive {
 					m.PopTodo.inputActive = false
 					m.PopTodo.textActive = true
-					m.PopTodo.input.TextStyle = TextStyleInput
 					m.PopTodo.input.SetCursor(0)
 					m.PopTodo.input.CursorStyle = TextStyleInput
+					m.PopTodo.textarea.Placeholder = " "
+					m.PopTodo.textarea.Cursor.Style = cursorStyle
+					m.PopTodo.textarea.SetCursor(22)
 					m.PopTodo.textarea.Focus()
 					m.PopTodo.confirm = 1
 				} else if m.PopTodo.textActive {
+					m.PopTodo.textarea.Cursor.Style = cursorStyle
+					m.PopTodo.textarea.Cursor.Style = TextStyleInput
 					m.PopTodo.inputActive = false
 					m.PopTodo.textActive = false
 					m.PopTodo.confirm = 2
 				} else if m.PopTodo.confirm == 2 {
 					m.PopTodo.confirm = 3
 				} else if m.PopTodo.confirm == 3 {
+					m.PopTodo.input.CursorStyle = cursorStyle
+					m.PopTodo.input.CursorEnd()
 					m.PopTodo.confirm = 0
 					m.PopTodo.inputActive = true
 				}

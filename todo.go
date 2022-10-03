@@ -12,16 +12,9 @@ func leninfo(t []info) int {
 	return len(t)
 }
 
-func (t *Todo) Addvalue(title, desc string, pos int) {
-	if pos == 0 {
-	} else if pos == 1 {
-	} else if pos == 2 {
-	}
-}
-
 func (t *Todo) AddTodo(title, desc string) {
 	ts := time.Now()
-	date := ts.String()
+	date := ts.Format("01-02-2006 01:04:04")
 	titles := info{
 		Title: title,
 		Idx:   len(t.Todo.Title) + 1,
@@ -46,7 +39,7 @@ func (t *Todo) AddTodo(title, desc string) {
 
 func (t *Todo) AddProgress(title, desc string) {
 	ts := time.Now()
-	date := ts.String()
+	date := ts.Format("01-02-2006 01:04:04")
 	titles := info{
 		Title: title,
 		Idx:   len(t.Progress.Title) + 1,
@@ -62,7 +55,7 @@ func (t *Todo) AddProgress(title, desc string) {
 
 	(*t).Progress.Title = append((*t).Progress.Title, titles)
 	(*t).Progress.Desc = append((*t).Progress.Desc, descs)
-	(*t).Progress.Date = append((*t).Todo.Date, dates)
+	(*t).Progress.Date = append((*t).Progress.Date, dates)
 	if (*t).Progress.Len == -1 {
 		(*t).Progress.Len = 1
 	} else {
@@ -72,7 +65,7 @@ func (t *Todo) AddProgress(title, desc string) {
 
 func (t *Todo) AddFinish(title, desc string) {
 	ts := time.Now()
-	date := ts.String()
+	date := ts.Format("01-02-2006 01:04:04")
 	titles := info{
 		Title: title,
 		Idx:   len(t.Finish.Title) + 1,
@@ -87,7 +80,7 @@ func (t *Todo) AddFinish(title, desc string) {
 	}
 	(*t).Finish.Title = append((*t).Finish.Title, titles)
 	(*t).Finish.Desc = append((*t).Finish.Desc, descs)
-	(*t).Finish.Date = append((*t).Todo.Date, dates)
+	(*t).Finish.Date = append((*t).Finish.Date, dates)
 	if (*t).Finish.Len == -1 {
 		(*t).Finish.Len = 1
 	} else {

@@ -74,17 +74,17 @@ func (m Model) GetDate() string {
 
 func (m Model) GetDesc() string {
 	if m.todoView == 0 {
-		if m.Todo.Todo.Idx > m.Todo.Todo.Len || m.Todo.Todo.Idx < 1 {
+		if m.Todo.Todo.Idx > m.Todo.Todo.Len || m.Todo.Todo.Idx < 0 {
 			return ""
 		}
 		return m.Todo.Todo.Desc[m.Todo.Todo.Idx].Title
 	} else if m.todoView == 1 {
-		if m.Todo.Progress.Idx > m.Todo.Progress.Len || m.Todo.Progress.Idx < 1 {
+		if m.Todo.Progress.Idx > m.Todo.Progress.Len || m.Todo.Progress.Idx < 0 {
 			return ""
 		}
 		return m.Todo.Progress.Desc[m.Todo.Progress.Idx].Title
 	} else if m.todoView == 2 {
-		if m.Todo.Finish.Idx > m.Todo.Finish.Len || m.Todo.Finish.Idx < 1 {
+		if m.Todo.Finish.Idx > m.Todo.Finish.Len || m.Todo.Finish.Idx < 0 {
 			return ""
 		}
 		return m.Todo.Finish.Desc[m.Todo.Finish.Idx].Title
@@ -115,8 +115,11 @@ func InitTodo(title string) Todo {
 	var todo Todo
 	todo.Project = title
 	todo.Todo.Len = -1
+	todo.Todo.Date = nil
 	todo.Progress.Len = -1
+	todo.Progress.Date = nil
 	todo.Finish.Len = -1
+	todo.Finish.Date = nil
 	return todo
 }
 

@@ -32,11 +32,8 @@ var (
 
 	// helper
 	helpStyle = lipgloss.NewStyle().
-			Foreground(lipgloss.Color("#383838")).
-			Border(borderRadius).
-			BorderTop(false).
-			BorderLeft(false).
-			BorderRight(false)
+			Foreground(lipgloss.Color("#FFAB00")).
+			Margin(1, 2)
 
 	// cursor
 	focusedStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
@@ -159,12 +156,12 @@ var (
 			Foreground(lipgloss.Color("#FFF7DB")).
 			Background(lipgloss.Color("#888B7E")).
 			BorderBackground(lipgloss.Color("#888B7E")).
-			Padding(0, 3).Margin(1, 3)
+			Padding(0, 3).Margin(1, 10)
 	buttonStyleSelect = lipgloss.NewStyle().
 				Foreground(lipgloss.Color(blue)).
 				Background(lipgloss.Color("#888B7E")).
 				BorderBackground(lipgloss.Color("#888B7E")).
-				Padding(0, 3).Margin(1, 3)
+				Padding(0, 3).Margin(1, 10)
 	buttonStyleAdd = lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#FFF7DB")).
 			Background(lipgloss.Color("#888B7E")).
